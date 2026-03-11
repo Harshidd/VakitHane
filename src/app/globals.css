@@ -1,26 +1,93 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
+@theme {
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+}
+
+/* ── Light ── */
+:root {
+  --background: #f4f2ef;
+  --foreground: #0f0e12;
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-shadow: rgba(0, 0, 0, 0.08);
+}
+
+/* ── Dark ── */
+.dark {
+  --background: #0d0e14;
+  --foreground: #eeedf5;
+  --glass-bg: rgba(22, 22, 36, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --glass-shadow: rgba(0, 0, 0, 0.55);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0d0e14;
+    --foreground: #eeedf5;
+    --glass-bg: rgba(22, 22, 36, 0.55);
+    --glass-border: rgba(255, 255, 255, 0.07);
+    --glass-shadow: rgba(0, 0, 0, 0.55);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+
+/* ── Glass ── */
+@layer utilities {
+  .glass {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 6px 28px 0 var(--glass-shadow);
+  }
+
+  .glass-panel {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 6px 28px 0 var(--glass-shadow);
+    border-radius: 1.5rem;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* ── Light mesh: lavender-rose-amber ── */
+.bg-mesh-default {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse 60% 50% at 15% 10%, hsla(260, 70%, 70%, 0.20) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 45% at 85% 5%, hsla(330, 80%, 70%, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 50% 90%, hsla(220, 75%, 70%, 0.16) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 50% at 90% 60%, hsla(35, 80%, 72%, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 5% 70%, hsla(190, 70%, 68%, 0.12) 0%, transparent 60%);
+}
+
+/* ── Dark mesh: deep indigo-violet-teal ── */
+.dark .bg-mesh-default {
+  background-image:
+    radial-gradient(ellipse 65% 55% at 15% 10%, hsla(250, 70%, 35%, 0.35) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 45% at 85% 8%, hsla(290, 65%, 30%, 0.28) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 55% at 50% 88%, hsla(210, 70%, 30%, 0.30) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 45% at 92% 58%, hsla(175, 60%, 25%, 0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 5% 68%, hsla(230, 65%, 28%, 0.25) 0%, transparent 60%);
+}
+
+/* ── Scrollbar hide ── */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
