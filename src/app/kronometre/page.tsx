@@ -56,7 +56,7 @@ export default function KronometrePage() {
                 <Link href="/" className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity text-sm font-semibold">
                     <Timer size={18} /> VakitHane
                 </Link>
-                <span className="text-xs text-foreground/30 uppercase tracking-widest font-bold">Kronometre</span>
+                <span className="text-[13px] text-foreground/45 tracking-wide font-semibold">Kronometre</span>
             </header>
 
             {/* Big display */}
@@ -106,7 +106,7 @@ export default function KronometrePage() {
             {/* Laps */}
             {laps.length > 0 && (
                 <div className="w-full max-w-md">
-                    <div className="flex items-center justify-between text-[10px] uppercase tracking-widest text-foreground/35 font-bold px-4 mb-2">
+                    <div className="flex items-center justify-between text-[12px] tracking-wide text-foreground/50 font-semibold px-4 mb-2">
                         <span>Tur</span>
                         <span>Tur Süresi</span>
                         <span>Toplam</span>

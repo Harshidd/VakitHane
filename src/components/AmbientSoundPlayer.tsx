@@ -75,7 +75,7 @@ export function AmbientSoundPlayer() {
                             className="absolute right-0 top-14 w-60 sm:w-64 glass p-4 rounded-2xl flex flex-col gap-4 shadow-xl border border-foreground/15"
                         >
                             <div className="flex justify-between items-center mb-1">
-                                <span className="font-bold text-xs uppercase tracking-widest text-foreground/50">Ortam Sesleri</span>
+                                <span className="text-[12px] font-semibold tracking-wide text-foreground/50">Ortam Sesleri</span>
                             </div>
 
                             <div className="grid grid-cols-2 gap-2">

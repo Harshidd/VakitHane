@@ -60,7 +60,7 @@ export function BreathingCircle({ running, phaseLabel, phaseDur, color, timeRema
                             </span>
                         )}
                         {!running && (
-                            <span className="text-[10px] text-foreground/40 mt-1 uppercase tracking-widest font-bold">
+                            <span className="text-[12px] text-foreground/45 mt-1 tracking-wide font-medium">
                                 Tıkla
                             </span>
                         )}

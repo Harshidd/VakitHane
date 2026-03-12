@@ -113,7 +113,7 @@ export default function Home() {
               <div className="bg-foreground text-background p-2 rounded-xl group-hover:rotate-12 transition-transform shadow-md">
                 <Timer size={14} />
               </div>
-              <span className="font-semibold text-sm tracking-tight hidden sm:block">VakitHane</span>
+              <span className="font-bold text-[15px] tracking-tight hidden sm:block">VakitHane</span>
             </div>
             {stats.sessions > 0 && (
               <motion.div
@@ -173,7 +173,7 @@ export default function Home() {
 
                   {/* LGS group */}
                   <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
-                    <span className="text-[9px] font-extrabold text-foreground/30 uppercase tracking-widest">LGS</span>
+                    <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">LGS</span>
                     <div className="flex gap-1.5">
                       {PRESET_GROUPS[0].items.map(p => {
                         const idx = PRESETS.findIndex(x => x.label === p.label);
@@ -191,7 +191,7 @@ export default function Home() {
 
                   {/* YKS group */}
                   <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
-                    <span className="text-[9px] font-extrabold text-foreground/30 uppercase tracking-widest">YKS</span>
+                    <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">YKS</span>
                     <div className="flex gap-1.5">
                       {PRESET_GROUPS[1].items.map(p => {
                         const idx = PRESETS.findIndex(x => x.label === p.label);
@@ -209,7 +209,7 @@ export default function Home() {
 
                   {/* Custom hour:min */}
                   <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
-                    <span className="text-[9px] font-extrabold text-foreground/30 uppercase tracking-widest">Özel Süre</span>
+                    <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">Özel Süre</span>
                     <div className="flex items-center gap-2">
                       <input
                         type="number" min="0" max="23"
@@ -349,13 +349,13 @@ function CatCard({ cat, compact }: { cat: CatItem; compact?: boolean }) {
   return (
     <Link
       href={cat.href}
-      className={`group flex flex-col ${compact ? "items-center text-center" : "items-start"} p-4 rounded-2xl glass border border-foreground/10 shadow-sm hover:scale-[1.02] hover:shadow-lg transition-all duration-200 w-full`}
+      className={`group flex flex-col ${compact ? "items-center text-center p-3" : "items-start p-4.5"} rounded-3xl glass border border-foreground/10 shadow-sm hover:scale-[1.02] hover:shadow-lg transition-all w-full`}
     >
-      <div className="p-2.5 rounded-xl glass mb-3 group-hover:bg-foreground group-hover:text-background transition-colors duration-200">
-        <Icon size={compact ? 17 : 20} strokeWidth={1.5} />
+      <div className={`${compact ? "p-2.5 mb-2" : "p-3 mb-3.5"} rounded-2xl glass group-hover:bg-foreground group-hover:text-background transition-colors`}>
+        <Icon size={compact ? 18 : 22} strokeWidth={1.5} />
       </div>
-      <span className={`${compact ? "text-xs" : "text-sm"} font-bold tracking-tight group-hover:text-foreground/80 transition-colors leading-tight`}>{cat.name}</span>
-      {!compact && <span className="text-[10px] text-foreground/35 font-medium uppercase tracking-widest mt-1.5 leading-tight">{cat.desc}</span>}
+      <span className={`${compact ? "text-[13px]" : "text-[16px]"} font-semibold tracking-tight group-hover:text-foreground/80 transition-colors leading-snug`}>{cat.name}</span>
+      {!compact && <span className="text-[12px] text-foreground/45 font-medium tracking-wide mt-1 leading-snug">{cat.desc}</span>}
     </Link>
   );
 }

@@ -196,7 +196,7 @@ export default function MeditasyonPage() {
                 <div className="flex items-center gap-8 shrink-0 mt-4 mb-4">
                     <div className="text-center">
                         <div className="text-2xl font-bold tabular-nums h-8 flex items-center justify-center">{cycles}</div>
-                        <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/35">Döngü</div>
+                        <div className="text-[12px] font-semibold tracking-wide text-foreground/45 mt-1">Döngü</div>
                     </div>
                     <div className="w-px h-8 bg-foreground/10" />
 
@@ -208,7 +208,7 @@ export default function MeditasyonPage() {
                     <div className="w-px h-8 bg-foreground/10" />
                     <div className="text-center">
                         <div className="text-2xl font-bold tabular-nums h-8 flex items-center justify-center">{fmtTotal(totalSecs)}</div>
-                        <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/35">Süre</div>
+                        <div className="text-[12px] font-semibold tracking-wide text-foreground/45 mt-1">Süre</div>
                     </div>
                 </div>
 

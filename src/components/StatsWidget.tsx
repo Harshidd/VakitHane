@@ -50,7 +50,7 @@ export function StatsWidget() {
                                 </div>
                                 <div>
                                     <div className="text-xl font-bold">{streak} Günlük</div>
-                                    <div className="text-xs text-foreground/50 font-medium uppercase tracking-widest">Seri</div>
+                                    <div className="text-[12px] text-foreground/50 font-medium tracking-wide mt-0.5">Seri</div>
                                 </div>
                             </div>
 
@@ -60,7 +60,7 @@ export function StatsWidget() {
                                 </div>
                                 <div>
                                     <div className="text-xl font-bold">{totalSessions}</div>
-                                    <div className="text-xs text-foreground/50 font-medium uppercase tracking-widest">Seans Tamamlandı</div>
+                                    <div className="text-[12px] text-foreground/50 font-medium tracking-wide mt-0.5">Seans Tamamlandı</div>
                                 </div>
                             </div>
 

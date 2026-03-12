@@ -65,7 +65,7 @@ export default function DunyaSaatleriPage() {
                     <ArrowLeft size={14} />
                     VakitHane
                 </Link>
-                <span className="text-[10px] text-white/20 uppercase tracking-[0.22em] font-bold">Dünya Saatleri</span>
+                <span className="text-[13px] text-white/40 tracking-wide font-semibold">Dünya Saatleri</span>
                 <div className="w-20" /> {/* spacer */}
             </header>
 
@@ -85,7 +85,7 @@ export default function DunyaSaatleriPage() {
 
                     {/* Panel header */}
                     <div className="px-4 py-3 border-b border-white/5 shrink-0">
-                        <span className="text-[9px] font-bold text-white/25 uppercase tracking-[0.2em]">Şehir Saatleri</span>
+                        <span className="text-[12px] font-semibold text-white/40 tracking-wide">Şehir Saatleri</span>
                     </div>
 
                     {/* Scrollable city list */}
@@ -97,8 +97,8 @@ export default function DunyaSaatleriPage() {
 
                     {/* Footer branding */}
                     <div className="px-4 py-3 border-t border-white/5 shrink-0">
-                        <span className="text-[9px] text-white/15 font-medium tracking-[0.2em] uppercase">
-                            design by <strong className="text-white/25">MRK</strong>
+                        <span className="text-[11px] text-white/30 font-medium tracking-wide">
+                            design by <strong className="text-white/40">MRK</strong>
                         </span>
                     </div>
                 </div>

@@ -36,7 +36,7 @@ export function VintageWallClock({ className = "" }: { className?: string }) {
                         <circle cx="100" cy="100" r="98" fill="none" className="stroke-foreground/5" strokeWidth="4" />
 
                         {/* Title text */}
-                        <text x="100" y="70" textAnchor="middle" className="fill-foreground/30 font-sans tracking-widest text-[8px] font-bold uppercase mt-2">FOCUS TIME</text>
+                        <text x="100" y="70" textAnchor="middle" className="fill-foreground/30 font-sans tracking-wide text-[9px] font-bold mt-2">Focus Time</text>
 
                         {/* Ticks & Numbers */}
                         {Array.from({ length: 60 }).map((_, i) => {

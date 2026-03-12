@@ -62,8 +62,8 @@ export default function SinavSayaciPage() {
                     {EXAMS.map(ex => (
                         <button key={ex.id} onClick={() => setSelectedId(ex.id)}
                             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${selectedId === ex.id
-                                    ? "bg-foreground text-background shadow-sm"
-                                    : "text-foreground/45 hover:text-foreground"
+                                ? "bg-foreground text-background shadow-sm"
+                                : "text-foreground/45 hover:text-foreground"
                                 }`}>
                             <span>{ex.emoji}</span> {ex.name}
                         </button>
@@ -97,8 +97,8 @@ export default function SinavSayaciPage() {
                     >
                         {/* Exam info */}
                         <div className="flex flex-col items-center gap-1 text-center">
-                            <div className="flex items-center gap-2 text-foreground/35 text-xs font-bold uppercase tracking-widest">
-                                <Target size={12} />
+                            <div className="flex items-center gap-2 text-foreground/50 text-[13px] font-semibold tracking-wide">
+                                <Target size={14} />
                                 Hedefe Kalan Süre
                             </div>
                             <h1 className="text-3xl font-bold tracking-tight">{exam.name}</h1>
@@ -124,7 +124,7 @@ export default function SinavSayaciPage() {
                                         style={{ fontVariantNumeric: "tabular-nums" }}>
                                         {pad(value)}
                                     </span>
-                                    <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-foreground/40">{label}</span>
+                                    <span className="text-[12px] font-medium tracking-wide text-foreground/50">{label}</span>
                                 </div>
                             ))}
                         </div>
@@ -136,7 +136,7 @@ export default function SinavSayaciPage() {
                             const pct = Math.max(0, Math.min(100, 100 - (remainDays / totalDays * 100)));
                             return (
                                 <div className="w-full">
-                                    <div className="flex justify-between text-[10px] text-foreground/30 font-bold uppercase tracking-widest mb-1.5">
+                                    <div className="flex justify-between text-[12px] text-foreground/45 font-medium tracking-wide mb-1.5">
                                         <span className="flex items-center gap-1"><BookOpen size={10} /> Geçen süre</span>
                                         <span>{pct.toFixed(1)}%</span>
                                     </div>

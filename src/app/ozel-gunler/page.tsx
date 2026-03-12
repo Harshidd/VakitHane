@@ -69,13 +69,13 @@ export default function OzelGunlerPage() {
 
             {/* Header */}
             <header className="sticky top-0 z-30 flex items-center justify-between px-5 pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5">
-                <div className="flex items-center gap-2 text-foreground/50 text-xs font-bold uppercase tracking-widest">
-                    <Calendar size={13} /> Özel Günlerim
+                <div className="flex items-center gap-2 text-foreground/60 text-[14px] font-semibold tracking-tight">
+                    <Calendar size={15} /> Özel Günlerim
                 </div>
                 <button onClick={() => setShowForm(s => !s)}
                     className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all ${showForm
-                            ? "bg-foreground text-background border-foreground"
-                            : "glass border-foreground/20 text-foreground/60 hover:text-foreground"
+                        ? "bg-foreground text-background border-foreground"
+                        : "glass border-foreground/20 text-foreground/60 hover:text-foreground"
                         }`}>
                     <Plus size={13} />
                     Ekle
@@ -94,8 +94,8 @@ export default function OzelGunlerPage() {
                             className="overflow-hidden mb-4"
                         >
                             <div className="glass-panel p-5 flex flex-col gap-3">
-                                <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/35 flex items-center gap-1">
-                                    <Sparkles size={10} /> Yeni Etkinlik
+                                <p className="text-[12px] font-semibold tracking-wide text-foreground/50 flex items-center gap-1.5">
+                                    <Sparkles size={12} /> Yeni Etkinlik
                                 </p>
 
                                 {/* Emoji picker */}
@@ -170,7 +170,7 @@ export default function OzelGunlerPage() {
                                             {text}
                                         </div>
                                         {urgent && !isExpired && (
-                                            <div className="text-[8px] text-amber-400/70 font-bold uppercase tracking-wide">Yaklaşıyor!</div>
+                                            <div className="text-[10px] text-amber-500 font-semibold tracking-wide pt-0.5">Yaklaşıyor</div>
                                         )}
                                     </div>
 

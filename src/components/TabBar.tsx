@@ -36,8 +36,8 @@ export function TabBar({ inline = false }: { inline?: boolean }) {
                             />
                         )}
                         <span className="relative z-10 flex flex-col items-center gap-1">
-                            <Icon size={17} strokeWidth={isActive ? 2.5 : 2} />
-                            <span className={`text-[9px] font-bold tracking-wide uppercase leading-none transition-all ${isActive ? "opacity-100" : "opacity-60 hidden sm:block group-hover:opacity-100"}`}>
+                            <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+                            <span className={`text-[10px] font-semibold tracking-tight leading-none transition-all ${isActive ? "opacity-100" : "opacity-60 hidden sm:block group-hover:opacity-100"}`}>
                                 {tab.label}
                             </span>
                         </span>
