@@ -29,10 +29,10 @@ const PROGRAMS = [
 const PHASE_LABELS = ["Nefes Al", "Tut", "Nefes Ver", "Bekle"];
 
 const SOUNDS = [
-    { id: "rain", name: "Yağmur", icon: CloudRain },
-    { id: "fire", name: "Şömine", icon: Flame },
-    { id: "wind", name: "Rüzgar", icon: Wind },
-    { id: "space", name: "Uzay", icon: Rocket },
+    { id: "rain", name: "Yağmur", icon: CloudRain, url: "https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg" },
+    { id: "fire", name: "Şömine", icon: Flame, url: "https://actions.google.com/sounds/v1/ambiences/fire.ogg" },
+    { id: "wind", name: "Rüzgar", icon: Wind, url: "https://actions.google.com/sounds/v1/weather/winter_wind.ogg" },
+    { id: "space", name: "Uzay", icon: Rocket, url: "https://actions.google.com/sounds/v1/science_fiction/deep_space_hum.ogg" },
 ];
 
 export default function MeditasyonPage() {
@@ -105,8 +105,11 @@ export default function MeditasyonPage() {
         const extActive = document.body.getAttribute("data-theme");
         if (extActive) {
             setActiveSound(extActive);
-            audioRef.current.src = `/sounds/${extActive}.mp3`;
-            audioRef.current.play().catch(() => { });
+            const snd = SOUNDS.find(s => s.id === extActive);
+            if (snd) {
+                audioRef.current.src = snd.url;
+                audioRef.current.play().catch(() => { });
+            }
         }
         return () => {
             if (audioRef.current) {
@@ -125,9 +128,12 @@ export default function MeditasyonPage() {
         } else {
             setActiveSound(id);
             document.body.setAttribute("data-theme", id);
-            audioRef.current.src = `/sounds/${id}.mp3`;
-            audioRef.current.volume = 0.5;
-            audioRef.current.play().catch(e => console.log("Play err", e));
+            const snd = SOUNDS.find(s => s.id === id);
+            if (snd) {
+                audioRef.current.src = snd.url;
+                audioRef.current.volume = 0.5;
+                audioRef.current.play().catch(e => console.log("Play err", e));
+            }
         }
     };
 
@@ -137,14 +143,14 @@ export default function MeditasyonPage() {
     const fmtTotal = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
 
     return (
-        <div className="bg-mesh-default h-screen flex flex-col overflow-y-auto overflow-x-hidden">
+        <div className="bg-mesh-default h-screen flex flex-col overflow-hidden">
 
             {/* Program selector header */}
-            <header className="sticky top-0 z-30 flex justify-center pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5">
-                <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md overflow-x-auto scrollbar-hide">
+            <header className="flex-none flex justify-center pt-2 pb-2 backdrop-blur-md bg-background/70 border-b border-foreground/5 z-30">
+                <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
                     {PROGRAMS.map(p => (
                         <button key={p.id} onClick={() => setProgramId(p.id)}
-                            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${programId === p.id
+                            className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all whitespace-nowrap ${programId === p.id
                                 ? "bg-foreground text-background shadow-sm"
                                 : "text-foreground/45 hover:text-foreground"
                                 }`}>
@@ -154,7 +160,7 @@ export default function MeditasyonPage() {
                 </div>
             </header>
 
-            <main className="flex-1 flex flex-col items-center justify-start px-4 py-8 pb-32 gap-6 relative z-10 w-full max-w-xl mx-auto">
+            <main className="flex-1 flex flex-col items-center justify-start px-4 pt-4 pb-24 gap-4 relative z-10 w-full max-w-xl mx-auto min-h-0">
 
                 {/* Zen quote (Moved to TOP, styled like EXAMS tab) */}
                 <motion.div
@@ -177,10 +183,10 @@ export default function MeditasyonPage() {
                 </div>
 
                 {/* Breathing circle — Interactive & Centralized */}
-                <div className="relative flex items-center justify-center py-4">
+                <div className="relative flex-1 flex items-center justify-center min-h-0 w-full shrink-0 max-h-[280px]">
                     {/* Colored ring behind the circle */}
-                    <div className="absolute inset-0 rounded-full blur-[40px] opacity-20 transition-colors duration-1000 pointer-events-none"
-                        style={{ background: program.color, width: 280, height: 280, margin: "auto" }} />
+                    <div className="absolute rounded-full blur-[40px] opacity-20 transition-colors duration-1000 pointer-events-none"
+                        style={{ background: program.color, width: 240, height: 240 }} />
 
                     <BreathingCircle
                         running={running}
@@ -193,7 +199,7 @@ export default function MeditasyonPage() {
                 </div>
 
                 {/* Phase progress dots */}
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center shrink-0">
                     {phases.map((dur, i) => (
                         <div key={i} className="flex flex-col items-center gap-1.5">
                             <div className={`h-1.5 rounded-full transition-all duration-500 ${i === phase && running ? "w-10" : "w-4"}`}
@@ -208,7 +214,7 @@ export default function MeditasyonPage() {
                 </div>
 
                 {/* Stats & Reset Row */}
-                <div className="flex items-center gap-6 mt-2">
+                <div className="flex items-center gap-6 shrink-0 mt-1">
                     <div className="text-center">
                         <div className="text-2xl font-bold tabular-nums h-8 flex items-center justify-center">{cycles}</div>
                         <div className="text-[9px] font-bold uppercase tracking-widest text-foreground/35">Döngü</div>
@@ -228,10 +234,10 @@ export default function MeditasyonPage() {
                 </div>
 
                 {/* Inline Ambient Sounds Grid */}
-                <div className="w-full mt-6 bg-foreground/5 p-5 rounded-3xl border border-foreground/10 shadow-inner">
-                    <div className="flex items-center gap-2 justify-center mb-4">
-                        <Volume2 size={14} className="text-foreground/40" />
-                        <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-foreground/40">Ortam Sesleri</span>
+                <div className="w-full bg-foreground/5 p-3 rounded-3xl border border-foreground/10 shadow-inner shrink-0 mt-2">
+                    <div className="flex items-center gap-2 justify-center mb-3">
+                        <Volume2 size={12} className="text-foreground/40" />
+                        <span className="text-[9px] uppercase font-bold tracking-[0.2em] text-foreground/40">Ortam Sesleri</span>
                     </div>
                     <div className="grid grid-cols-4 gap-2">
                         {SOUNDS.map(snd => {
@@ -242,8 +248,8 @@ export default function MeditasyonPage() {
                                     key={snd.id}
                                     onClick={() => toggleSound(snd.id)}
                                     className={`flex flex-col items-center justify-center py-3 px-1 rounded-2xl gap-2 transition-all border ${isActive
-                                            ? "bg-foreground text-background shadow-md border-transparent scale-[1.02]"
-                                            : "glass border-foreground/15 text-foreground/50 hover:bg-foreground/10 hover:text-foreground"
+                                        ? "bg-foreground text-background shadow-md border-transparent scale-[1.02]"
+                                        : "glass border-foreground/15 text-foreground/50 hover:bg-foreground/10 hover:text-foreground"
                                         }`}
                                 >
                                     <Icon size={20} className={isActive ? "opacity-90 animate-pulse" : "opacity-60"} />

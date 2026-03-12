@@ -82,6 +82,35 @@ body {
     radial-gradient(ellipse 60% 40% at 5% 68%, hsla(230, 65%, 28%, 0.25) 0%, transparent 60%);
 }
 
+/* ── Ambient sound themes ── */
+body[data-theme="rain"] .bg-mesh-default,
+.dark body[data-theme="rain"] .bg-mesh-default {
+  background-image:
+    radial-gradient(ellipse 65% 55% at 20% 10%, hsla(200, 80%, 30%, 0.4) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 60% at 80% 80%, hsla(220, 70%, 25%, 0.3) 0%, transparent 60%);
+}
+
+body[data-theme="fire"] .bg-mesh-default,
+.dark body[data-theme="fire"] .bg-mesh-default {
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% 90%, hsla(20, 90%, 35%, 0.4) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 50% at 20% 80%, hsla(35, 80%, 30%, 0.3) 0%, transparent 60%);
+}
+
+body[data-theme="wind"] .bg-mesh-default,
+.dark body[data-theme="wind"] .bg-mesh-default {
+  background-image:
+    radial-gradient(ellipse 80% 40% at 10% 20%, hsla(180, 50%, 35%, 0.3) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 90% 40%, hsla(200, 40%, 30%, 0.25) 0%, transparent 65%);
+}
+
+body[data-theme="space"] .bg-mesh-default,
+.dark body[data-theme="space"] .bg-mesh-default {
+  background-image:
+    radial-gradient(ellipse 70% 70% at 50% 50%, hsla(280, 80%, 20%, 0.5) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 80% 20%, hsla(300, 90%, 15%, 0.4) 0%, transparent 50%);
+}
+
 /* ── Scrollbar hide ── */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
