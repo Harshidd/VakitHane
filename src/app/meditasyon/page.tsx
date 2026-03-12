@@ -94,7 +94,7 @@ export default function MeditasyonPage() {
     const fmtTotal = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
 
     return (
-        <div className="bg-mesh-default min-h-screen flex flex-col overflow-hidden">
+        <div className="bg-mesh-default h-screen flex flex-col overflow-y-auto overflow-x-hidden">
 
             {/* Program selector header */}
             <header className="sticky top-0 z-30 flex justify-center pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5">
@@ -102,8 +102,8 @@ export default function MeditasyonPage() {
                     {PROGRAMS.map(p => (
                         <button key={p.id} onClick={() => setProgramId(p.id)}
                             className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${programId === p.id
-                                    ? "bg-foreground text-background shadow-sm"
-                                    : "text-foreground/45 hover:text-foreground"
+                                ? "bg-foreground text-background shadow-sm"
+                                : "text-foreground/45 hover:text-foreground"
                                 }`}>
                             <span>{p.label}</span>
                         </button>
@@ -138,12 +138,17 @@ export default function MeditasyonPage() {
                     </motion.div>
                 </AnimatePresence>
 
-                {/* Breathing circle — uses existing component */}
-                <div className="relative flex items-center justify-center">
+                {/* Breathing circle — uses dynamic component */}
+                <div className="relative flex items-center justify-center py-6">
                     {/* Colored ring behind the circle */}
                     <div className="absolute inset-0 rounded-full blur-3xl opacity-20 transition-colors duration-1000"
                         style={{ background: program.color, width: 260, height: 260, margin: "auto" }} />
-                    <BreathingCircle />
+                    <BreathingCircle
+                        running={running}
+                        phaseLabel={activeLabel}
+                        phaseDur={currentPhaseDur}
+                        color={program.color}
+                    />
                 </div>
 
                 {/* Phase progress dots */}

@@ -1,69 +1,50 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-export function BreathingCircle() {
-    const [phase, setPhase] = useState<"inhale" | "hold" | "exhale">("inhale");
+interface Props {
+    running: boolean;
+    phaseLabel: string;
+    phaseDur: number;
+    color: string;
+}
 
-    useEffect(() => {
-        let timeout: NodeJS.Timeout;
+export function BreathingCircle({ running, phaseLabel, phaseDur, color }: Props) {
+    // If not running, stay small
+    const size = running && phaseLabel === "Nefes Al" ? 1.5 :
+        running && phaseLabel === "Tut" ? 1.5 :
+            running && phaseLabel === "Nefes Ver" ? 1 :
+                running && phaseLabel === "Bekle" ? 1 : 1.1; // default rest state
 
-        // Simple 4-7-8 breathing technique logic
-        if (phase === "inhale") {
-            timeout = setTimeout(() => setPhase("hold"), 4000);
-        } else if (phase === "hold") {
-            timeout = setTimeout(() => setPhase("exhale"), 7000);
-        } else if (phase === "exhale") {
-            timeout = setTimeout(() => setPhase("inhale"), 8000);
-        }
-
-        return () => clearTimeout(timeout);
-    }, [phase]);
-
-    const variants = {
-        inhale: { scale: 1.5, opacity: 0.8 },
-        hold: { scale: 1.5, opacity: 1 },
-        exhale: { scale: 1, opacity: 0.5 },
-    };
-
-    const getPhaseText = () => {
-        switch (phase) {
-            case "inhale": return "Nefes Al";
-            case "hold": return "Tut";
-            case "exhale": return "Nefes Ver";
-        }
-    };
+    const opacity = running && phaseLabel === "Nefes Al" ? 0.9 :
+        running && phaseLabel === "Tut" ? 1 :
+            running && phaseLabel === "Nefes Ver" ? 0.5 :
+                running && phaseLabel === "Bekle" ? 0.4 : 0.6; // default
 
     return (
         <div className="relative flex items-center justify-center w-64 h-64 sm:w-80 sm:h-80">
+            {/* Outer animated aura */}
             <motion.div
-                animate={phase}
-                variants={variants}
-                transition={{
-                    duration: phase === "inhale" ? 4 : phase === "hold" ? 7 : 8,
-                    ease: "easeInOut"
-                }}
-                className="absolute w-40 h-40 rounded-full bg-gradient-to-tr from-sky-400 to-indigo-500 blur-xl opacity-50"
+                animate={{ scale: size, opacity: opacity * 0.5 }}
+                transition={{ duration: running ? Math.max(0.5, phaseDur) : 1, ease: "easeInOut" }}
+                className="absolute w-40 h-40 rounded-full blur-xl"
+                style={{ background: `linear-gradient(to top right, ${color}, transparent)` }}
             />
 
+            {/* Inner glass circle */}
             <motion.div
-                animate={phase}
-                variants={variants}
-                transition={{
-                    duration: phase === "inhale" ? 4 : phase === "hold" ? 7 : 8,
-                    ease: "easeInOut"
-                }}
+                animate={{ scale: size, opacity: opacity }}
+                transition={{ duration: running ? Math.max(0.5, phaseDur) : 1, ease: "easeInOut" }}
                 className="absolute w-40 h-40 rounded-full glass border border-white/20 shadow-2xl flex items-center justify-center"
             >
                 <motion.span
-                    key={phase}
-                    initial={{ opacity: 0, y: 10 }}
+                    key={phaseLabel}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="text-lg font-medium text-foreground tracking-wide"
+                    transition={{ duration: 0.3 }}
+                    className="text-lg font-bold text-foreground tracking-wide"
                 >
-                    {getPhaseText()}
+                    {running ? phaseLabel : "Başla"}
                 </motion.span>
             </motion.div>
         </div>
