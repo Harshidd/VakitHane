@@ -1,15 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Props {
     running: boolean;
     phaseLabel: string;
     phaseDur: number;
     color: string;
+    timeRemain: number;
+    onClick?: () => void;
 }
 
-export function BreathingCircle({ running, phaseLabel, phaseDur, color }: Props) {
+export function BreathingCircle({ running, phaseLabel, phaseDur, color, timeRemain, onClick }: Props) {
     // If not running, stay small
     const size = running && phaseLabel === "Nefes Al" ? 1.5 :
         running && phaseLabel === "Tut" ? 1.5 :
@@ -27,26 +29,44 @@ export function BreathingCircle({ running, phaseLabel, phaseDur, color }: Props)
             <motion.div
                 animate={{ scale: size, opacity: opacity * 0.5 }}
                 transition={{ duration: running ? Math.max(0.5, phaseDur) : 1, ease: "easeInOut" }}
-                className="absolute w-40 h-40 rounded-full blur-xl"
+                className="absolute w-40 h-40 rounded-full blur-xl pointer-events-none"
                 style={{ background: `linear-gradient(to top right, ${color}, transparent)` }}
             />
 
-            {/* Inner glass circle */}
-            <motion.div
+            {/* Inner glass circle (Interactive) */}
+            <motion.button
+                onClick={onClick}
+                whileHover={{ scale: size * 1.05 }}
+                whileTap={{ scale: size * 0.95 }}
                 animate={{ scale: size, opacity: opacity }}
                 transition={{ duration: running ? Math.max(0.5, phaseDur) : 1, ease: "easeInOut" }}
-                className="absolute w-40 h-40 rounded-full glass border border-white/20 shadow-2xl flex items-center justify-center"
+                className="absolute w-40 h-40 rounded-full glass border border-white/20 shadow-2xl flex flex-col items-center justify-center cursor-pointer select-none"
             >
-                <motion.span
-                    key={phaseLabel}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="text-lg font-bold text-foreground tracking-wide"
-                >
-                    {running ? phaseLabel : "Başla"}
-                </motion.span>
-            </motion.div>
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={running ? phaseLabel : "idle"}
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 0.2 }}
+                        className="flex flex-col items-center justify-center"
+                    >
+                        <span className="text-xl font-bold text-foreground tracking-wide text-center leading-tight">
+                            {running ? phaseLabel : "Başla"}
+                        </span>
+                        {running && timeRemain > 0 && (
+                            <span className="text-sm font-bold text-foreground/70 mt-1 tabular-nums">
+                                {timeRemain}s
+                            </span>
+                        )}
+                        {!running && (
+                            <span className="text-[10px] text-foreground/40 mt-1 uppercase tracking-widest font-bold">
+                                Tıkla
+                            </span>
+                        )}
+                    </motion.div>
+                </AnimatePresence>
+            </motion.button>
         </div>
     );
 }

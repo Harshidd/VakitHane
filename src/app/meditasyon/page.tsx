@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { TabBar } from "@/components/TabBar";
 import { motion, AnimatePresence } from "framer-motion";
 import { BreathingCircle } from "@/components/BreathingCircle";
-import { Play, Pause, RotateCcw, Wind } from "lucide-react";
+import { RotateCcw, CloudRain, Flame, Wind, Rocket, Sparkles, Volume2 } from "lucide-react";
 
 const ZEN_QUOTES = [
     "Zihin bir su gibidir. Bulandığında görmek zordur, durulduğunda ise her şey berraklaşır.",
@@ -28,6 +28,13 @@ const PROGRAMS = [
 
 const PHASE_LABELS = ["Nefes Al", "Tut", "Nefes Ver", "Bekle"];
 
+const SOUNDS = [
+    { id: "rain", name: "Yağmur", icon: CloudRain },
+    { id: "fire", name: "Şömine", icon: Flame },
+    { id: "wind", name: "Rüzgar", icon: Wind },
+    { id: "space", name: "Uzay", icon: Rocket },
+];
+
 export default function MeditasyonPage() {
     const [programId, setProgramId] = useState("4-7-8");
     const [running, setRunning] = useState(false);
@@ -36,6 +43,10 @@ export default function MeditasyonPage() {
     const [cycles, setCycles] = useState(0);
     const [totalSecs, setTotalSecs] = useState(0);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Audio setup
+    const [activeSound, setActiveSound] = useState<string | null>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     const program = PROGRAMS.find(p => p.id === programId) ?? PROGRAMS[0];
     const phases = program.phases;
@@ -55,6 +66,7 @@ export default function MeditasyonPage() {
     // Switch program → reset
     useEffect(() => { reset(); }, [programId]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    // Timer logic
     useEffect(() => {
         if (!running) { if (intervalRef.current) clearInterval(intervalRef.current); return; }
 
@@ -63,7 +75,6 @@ export default function MeditasyonPage() {
             setPhaseTime(prev => {
                 const phaseDur = phases[phase] ?? 0;
                 if (phaseDur === 0) {
-                    // Skip zero-duration phases
                     setPhase(p => {
                         const next = (p + 1) % phases.length;
                         if (next === 0) setCycles(c => c + 1);
@@ -86,11 +97,43 @@ export default function MeditasyonPage() {
         return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
     }, [running, phase, phases]);
 
+    // Audio Mount
+    useEffect(() => {
+        audioRef.current = new Audio();
+        audioRef.current.loop = true;
+        // Clean up global ambient player overlay to not clash
+        const extActive = document.body.getAttribute("data-theme");
+        if (extActive) {
+            setActiveSound(extActive);
+            audioRef.current.src = `/sounds/${extActive}.mp3`;
+            audioRef.current.play().catch(() => { });
+        }
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current.src = "";
+            }
+        };
+    }, []);
+
+    const toggleSound = (id: string) => {
+        if (!audioRef.current) return;
+        if (activeSound === id) {
+            setActiveSound(null);
+            audioRef.current.pause();
+            document.body.removeAttribute("data-theme");
+        } else {
+            setActiveSound(id);
+            document.body.setAttribute("data-theme", id);
+            audioRef.current.src = `/sounds/${id}.mp3`;
+            audioRef.current.volume = 0.5;
+            audioRef.current.play().catch(e => console.log("Play err", e));
+        }
+    };
+
     const currentPhaseDur = phases[phase] ?? 1;
-    const progress = currentPhaseDur > 0 ? phaseTime / currentPhaseDur : 0;
     const activeLabel = PHASE_LABELS[phase] ?? "Nefes Al";
     const timeRemain = currentPhaseDur - phaseTime;
-
     const fmtTotal = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
 
     return (
@@ -111,94 +154,105 @@ export default function MeditasyonPage() {
                 </div>
             </header>
 
-            <main className="flex-1 flex flex-col items-center justify-center px-4 py-6 pb-24 gap-5 relative z-10">
+            <main className="flex-1 flex flex-col items-center justify-start px-4 py-8 pb-32 gap-6 relative z-10 w-full max-w-xl mx-auto">
 
-                {/* Program description */}
-                <div className="text-center">
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/35 mb-1 flex items-center justify-center gap-1">
-                        <Wind size={10} /> Nefes Tekniği
-                    </div>
-                    <h1 className="text-2xl font-bold">{program.label}</h1>
-                    <p className="text-xs text-foreground/40 font-medium mt-0.5">{program.desc}</p>
+                {/* Zen quote (Moved to TOP, styled like EXAMS tab) */}
+                <motion.div
+                    key={quote}
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-start justify-center gap-2 text-center w-full px-2"
+                >
+                    <Sparkles size={16} className="text-foreground/25 shrink-0 mt-0.5" />
+                    <p className="text-sm font-medium text-foreground/50 italic leading-relaxed">"{quote}"</p>
+                    <Sparkles size={16} className="text-foreground/25 shrink-0 mt-0.5" />
+                </motion.div>
+
+                {/* Info Text (below quote) */}
+                <div className="text-center mt-2 mb-2">
+                    <h1 className="text-2xl font-black bg-gradient-to-r from-foreground/60 to-foreground/90 bg-clip-text text-transparent">{program.label}</h1>
+                    <p className="text-xs text-foreground/40 font-bold tracking-widest uppercase mt-1">
+                        {program.desc}
+                    </p>
                 </div>
 
-                {/* Phase info */}
-                <AnimatePresence mode="wait">
-                    <motion.div key={phase}
-                        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
-                        transition={{ duration: 0.3 }}
-                        className="text-center"
-                    >
-                        <div className="text-4xl font-bold tracking-tight" style={{ color: running ? program.color : "inherit" }}>
-                            {running ? activeLabel : "Hazır"}
-                        </div>
-                        {running && (
-                            <div className="text-lg tabular-nums font-bold mt-1 opacity-60">{timeRemain}s</div>
-                        )}
-                    </motion.div>
-                </AnimatePresence>
-
-                {/* Breathing circle — uses dynamic component */}
-                <div className="relative flex items-center justify-center py-6">
+                {/* Breathing circle — Interactive & Centralized */}
+                <div className="relative flex items-center justify-center py-4">
                     {/* Colored ring behind the circle */}
-                    <div className="absolute inset-0 rounded-full blur-3xl opacity-20 transition-colors duration-1000"
-                        style={{ background: program.color, width: 260, height: 260, margin: "auto" }} />
+                    <div className="absolute inset-0 rounded-full blur-[40px] opacity-20 transition-colors duration-1000 pointer-events-none"
+                        style={{ background: program.color, width: 280, height: 280, margin: "auto" }} />
+
                     <BreathingCircle
                         running={running}
                         phaseLabel={activeLabel}
                         phaseDur={currentPhaseDur}
                         color={program.color}
+                        timeRemain={timeRemain}
+                        onClick={() => setRunning(r => !r)}
                     />
                 </div>
 
                 {/* Phase progress dots */}
                 <div className="flex gap-2 items-center">
                     {phases.map((dur, i) => (
-                        <div key={i} className="flex flex-col items-center gap-1">
-                            <div className={`h-1.5 rounded-full transition-all duration-500 ${i === phase && running ? "w-8" : "w-4"}`}
+                        <div key={i} className="flex flex-col items-center gap-1.5">
+                            <div className={`h-1.5 rounded-full transition-all duration-500 ${i === phase && running ? "w-10" : "w-4"}`}
                                 style={{ background: i === phase && running ? program.color : "rgba(255,255,255,0.15)" }} />
                             {dur > 0 && (
-                                <span className="text-[8px] text-foreground/30 font-bold">{PHASE_LABELS[i]?.split(" ")[2] ?? PHASE_LABELS[i]}</span>
+                                <span className={`text-[8px] font-bold uppercase tracking-widest ${i === phase && running ? "text-foreground/70" : "text-foreground/30"}`}>
+                                    {PHASE_LABELS[i]?.split(" ")[2] ?? PHASE_LABELS[i]}
+                                </span>
                             )}
                         </div>
                     ))}
                 </div>
 
-                {/* Stats — cycles + total time */}
-                <div className="flex gap-6 text-center">
-                    <div>
-                        <div className="text-2xl font-bold tabular-nums">{cycles}</div>
+                {/* Stats & Reset Row */}
+                <div className="flex items-center gap-6 mt-2">
+                    <div className="text-center">
+                        <div className="text-2xl font-bold tabular-nums h-8 flex items-center justify-center">{cycles}</div>
                         <div className="text-[9px] font-bold uppercase tracking-widest text-foreground/35">Döngü</div>
                     </div>
-                    <div className="w-px bg-foreground/10" />
-                    <div>
-                        <div className="text-2xl font-bold tabular-nums">{fmtTotal(totalSecs)}</div>
+                    <div className="w-px h-8 bg-foreground/10" />
+
+                    <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={reset}
+                        className="p-3.5 rounded-full glass border border-foreground/15 hover:bg-foreground/10 transition-colors text-foreground/50 hover:text-foreground">
+                        <RotateCcw size={18} />
+                    </motion.button>
+
+                    <div className="w-px h-8 bg-foreground/10" />
+                    <div className="text-center">
+                        <div className="text-2xl font-bold tabular-nums h-8 flex items-center justify-center">{fmtTotal(totalSecs)}</div>
                         <div className="text-[9px] font-bold uppercase tracking-widest text-foreground/35">Süre</div>
                     </div>
                 </div>
 
-                {/* Controls */}
-                <div className="flex gap-3">
-                    <motion.button whileTap={{ scale: 0.94 }} onClick={reset}
-                        className="p-3 rounded-2xl glass border border-foreground/15 hover:bg-foreground/10 transition-colors">
-                        <RotateCcw size={18} className="opacity-60" />
-                    </motion.button>
-                    <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.94 }}
-                        onClick={() => setRunning(r => !r)}
-                        className="px-10 py-3 rounded-2xl font-bold text-sm flex items-center gap-2 shadow-lg transition-all"
-                        style={running
-                            ? { background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)" }
-                            : { background: program.color, color: "#000" }
-                        }
-                    >
-                        {running ? <><Pause fill="currentColor" size={16} /> Duraklat</> : <><Play fill="currentColor" size={16} /> Başlat</>}
-                    </motion.button>
+                {/* Inline Ambient Sounds Grid */}
+                <div className="w-full mt-6 bg-foreground/5 p-5 rounded-3xl border border-foreground/10 shadow-inner">
+                    <div className="flex items-center gap-2 justify-center mb-4">
+                        <Volume2 size={14} className="text-foreground/40" />
+                        <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-foreground/40">Ortam Sesleri</span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2">
+                        {SOUNDS.map(snd => {
+                            const Icon = snd.icon;
+                            const isActive = activeSound === snd.id;
+                            return (
+                                <button
+                                    key={snd.id}
+                                    onClick={() => toggleSound(snd.id)}
+                                    className={`flex flex-col items-center justify-center py-3 px-1 rounded-2xl gap-2 transition-all border ${isActive
+                                            ? "bg-foreground text-background shadow-md border-transparent scale-[1.02]"
+                                            : "glass border-foreground/15 text-foreground/50 hover:bg-foreground/10 hover:text-foreground"
+                                        }`}
+                                >
+                                    <Icon size={20} className={isActive ? "opacity-90 animate-pulse" : "opacity-60"} />
+                                    <span className="text-[9px] font-bold uppercase tracking-widest text-center">{snd.name}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
-
-                {/* Zen quote */}
-                <p className="max-w-sm text-center text-[10px] text-foreground/25 italic font-medium leading-relaxed px-4">
-                    "{quote}"
-                </p>
 
             </main>
 
