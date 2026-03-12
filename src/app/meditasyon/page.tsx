@@ -174,19 +174,13 @@ export default function MeditasyonPage() {
                     <Sparkles size={16} className="text-foreground/25 shrink-0 mt-0.5" />
                 </motion.div>
 
-                {/* Info Text (below quote) */}
-                <div className="text-center mt-2 mb-2">
-                    <h1 className="text-2xl font-black bg-gradient-to-r from-foreground/60 to-foreground/90 bg-clip-text text-transparent">{program.label}</h1>
-                    <p className="text-xs text-foreground/40 font-bold tracking-widest uppercase mt-1">
-                        {program.desc}
-                    </p>
-                </div>
+
 
                 {/* Breathing circle — Interactive & Centralized */}
-                <div className="relative flex-1 flex items-center justify-center min-h-0 w-full shrink-0 max-h-[280px]">
+                <div className="relative flex-1 flex items-center justify-center min-h-0 w-full shrink-0">
                     {/* Colored ring behind the circle */}
                     <div className="absolute rounded-full blur-[40px] opacity-20 transition-colors duration-1000 pointer-events-none"
-                        style={{ background: program.color, width: 240, height: 240 }} />
+                        style={{ background: program.color, width: 280, height: 280 }} />
 
                     <BreathingCircle
                         running={running}
@@ -198,73 +192,52 @@ export default function MeditasyonPage() {
                     />
                 </div>
 
-                {/* Phase progress dots */}
-                <div className="flex gap-2 items-center shrink-0">
-                    {phases.map((dur, i) => (
-                        <div key={i} className="flex flex-col items-center gap-1.5">
-                            <div className={`h-1.5 rounded-full transition-all duration-500 ${i === phase && running ? "w-10" : "w-4"}`}
-                                style={{ background: i === phase && running ? program.color : "rgba(255,255,255,0.15)" }} />
-                            {dur > 0 && (
-                                <span className={`text-[8px] font-bold uppercase tracking-widest ${i === phase && running ? "text-foreground/70" : "text-foreground/30"}`}>
-                                    {PHASE_LABELS[i]?.split(" ")[2] ?? PHASE_LABELS[i]}
-                                </span>
-                            )}
-                        </div>
-                    ))}
-                </div>
-
                 {/* Stats & Reset Row */}
-                <div className="flex items-center gap-6 shrink-0 mt-1">
+                <div className="flex items-center gap-8 shrink-0 mt-4 mb-4">
                     <div className="text-center">
                         <div className="text-2xl font-bold tabular-nums h-8 flex items-center justify-center">{cycles}</div>
-                        <div className="text-[9px] font-bold uppercase tracking-widest text-foreground/35">Döngü</div>
+                        <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/35">Döngü</div>
                     </div>
                     <div className="w-px h-8 bg-foreground/10" />
 
                     <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={reset}
-                        className="p-3.5 rounded-full glass border border-foreground/15 hover:bg-foreground/10 transition-colors text-foreground/50 hover:text-foreground">
-                        <RotateCcw size={18} />
+                        className="p-4 rounded-full glass border border-foreground/15 hover:bg-foreground/15 transition-colors text-foreground/60 hover:text-foreground">
+                        <RotateCcw size={20} />
                     </motion.button>
 
                     <div className="w-px h-8 bg-foreground/10" />
                     <div className="text-center">
                         <div className="text-2xl font-bold tabular-nums h-8 flex items-center justify-center">{fmtTotal(totalSecs)}</div>
-                        <div className="text-[9px] font-bold uppercase tracking-widest text-foreground/35">Süre</div>
-                    </div>
-                </div>
-
-                {/* Inline Ambient Sounds Grid */}
-                <div className="w-full bg-foreground/5 p-3 rounded-3xl border border-foreground/10 shadow-inner shrink-0 mt-2">
-                    <div className="flex items-center gap-2 justify-center mb-3">
-                        <Volume2 size={12} className="text-foreground/40" />
-                        <span className="text-[9px] uppercase font-bold tracking-[0.2em] text-foreground/40">Ortam Sesleri</span>
-                    </div>
-                    <div className="grid grid-cols-4 gap-2">
-                        {SOUNDS.map(snd => {
-                            const Icon = snd.icon;
-                            const isActive = activeSound === snd.id;
-                            return (
-                                <button
-                                    key={snd.id}
-                                    onClick={() => toggleSound(snd.id)}
-                                    className={`flex flex-col items-center justify-center py-3 px-1 rounded-2xl gap-2 transition-all border ${isActive
-                                        ? "bg-foreground text-background shadow-md border-transparent scale-[1.02]"
-                                        : "glass border-foreground/15 text-foreground/50 hover:bg-foreground/10 hover:text-foreground"
-                                        }`}
-                                >
-                                    <Icon size={20} className={isActive ? "opacity-90 animate-pulse" : "opacity-60"} />
-                                    <span className="text-[9px] font-bold uppercase tracking-widest text-center">{snd.name}</span>
-                                </button>
-                            );
-                        })}
+                        <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/35">Süre</div>
                     </div>
                 </div>
 
             </main>
 
+            {/* Floating Ambient Sounds (Right Side) */}
+            <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-3 pointer-events-auto">
+                {SOUNDS.map(snd => {
+                    const Icon = snd.icon;
+                    const isActive = activeSound === snd.id;
+                    return (
+                        <button
+                            key={snd.id}
+                            onClick={() => toggleSound(snd.id)}
+                            className={`p-3 rounded-full transition-all flex items-center justify-center border shadow-lg ${isActive
+                                ? "bg-foreground text-background border-transparent scale-110"
+                                : "glass border-foreground/15 text-foreground/50 hover:bg-foreground/10 hover:text-foreground"
+                                }`}
+                            title={snd.name}
+                        >
+                            <Icon size={20} className={isActive ? "opacity-90 animate-pulse" : "opacity-60"} />
+                        </button>
+                    );
+                })}
+            </div>
+
             <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none">
                 <div className="pointer-events-auto"><TabBar /></div>
             </div>
-        </div>
+        </div >
     );
 }

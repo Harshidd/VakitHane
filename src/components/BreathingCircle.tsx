@@ -27,9 +27,9 @@ export function BreathingCircle({ running, phaseLabel, phaseDur, color, timeRema
         <div className="relative flex items-center justify-center w-64 h-64 sm:w-80 sm:h-80">
             {/* Outer animated aura */}
             <motion.div
-                animate={{ scale: size, opacity: opacity * 0.5 }}
+                animate={{ scale: size, opacity: opacity * 0.4 }}
                 transition={{ duration: running ? Math.max(0.5, phaseDur) : 1, ease: "easeInOut" }}
-                className="absolute w-40 h-40 rounded-full blur-xl pointer-events-none"
+                className="absolute w-52 h-52 rounded-full blur-2xl pointer-events-none"
                 style={{ background: `linear-gradient(to top right, ${color}, transparent)` }}
             />
 
@@ -40,7 +40,7 @@ export function BreathingCircle({ running, phaseLabel, phaseDur, color, timeRema
                 whileTap={{ scale: size * 0.95 }}
                 animate={{ scale: size, opacity: opacity }}
                 transition={{ duration: running ? Math.max(0.5, phaseDur) : 1, ease: "easeInOut" }}
-                className="absolute w-40 h-40 rounded-full glass border border-white/20 shadow-2xl flex flex-col items-center justify-center cursor-pointer select-none"
+                className="absolute w-52 h-52 rounded-full glass border border-white/20 shadow-2xl flex flex-col items-center justify-center cursor-pointer select-none"
             >
                 <AnimatePresence mode="wait">
                     <motion.div
@@ -51,7 +51,7 @@ export function BreathingCircle({ running, phaseLabel, phaseDur, color, timeRema
                         transition={{ duration: 0.2 }}
                         className="flex flex-col items-center justify-center"
                     >
-                        <span className="text-xl font-bold text-foreground tracking-wide text-center leading-tight">
+                        <span className="text-2xl font-black text-foreground tracking-wide text-center leading-tight">
                             {running ? phaseLabel : "Başla"}
                         </span>
                         {running && timeRemain > 0 && (
