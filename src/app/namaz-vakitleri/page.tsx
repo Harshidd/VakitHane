@@ -334,38 +334,58 @@ function ReligiousDaysTab() {
 export default function PrayerTimesPage() {
     const [tab, setTab] = useState<"namaz" | "dinigunler">("namaz");
     return (
-        <div className="bg-mesh-default min-h-screen flex flex-col">
+        <div className="bg-mesh-default min-h-screen overflow-y-auto overflow-x-hidden scrollbar-hide">
+            <div className="flex flex-col min-h-screen shrink-0 relative z-10 w-full">
 
-            <header className="sticky top-0 z-30 flex justify-center pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5">
-                <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
-                    <button onClick={() => setTab("namaz")}
-                        className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${tab === "namaz" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
-                        Namaz Vakitleri
-                    </button>
-                    <button onClick={() => setTab("dinigunler")}
-                        className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${tab === "dinigunler" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
-                        Dini Günler
-                    </button>
-                </div>
-            </header>
+                <header className="sticky top-0 z-30 flex justify-center pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5">
+                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
+                        <button onClick={() => setTab("namaz")}
+                            className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${tab === "namaz" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
+                            Namaz Vakitleri
+                        </button>
+                        <button onClick={() => setTab("dinigunler")}
+                            className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${tab === "dinigunler" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
+                            Dini Günler
+                        </button>
+                    </div>
+                </header>
 
-            <main className="flex-1 overflow-y-auto px-4 py-5 pb-24 max-w-xl mx-auto w-full">
-                <AnimatePresence mode="wait">
-                    {tab === "namaz" ? (
-                        <motion.div key="namaz"
-                            initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }}
-                            transition={{ duration: 0.22 }}>
-                            <PrayerTab />
-                        </motion.div>
-                    ) : (
-                        <motion.div key="dinigunler"
-                            initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }}
-                            transition={{ duration: 0.22 }}>
-                            <ReligiousDaysTab />
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </main>
+                <main className="flex-1 overflow-y-auto px-4 py-5 pb-24 max-w-xl mx-auto w-full">
+                    <AnimatePresence mode="wait">
+                        {tab === "namaz" ? (
+                            <motion.div key="namaz"
+                                initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }}
+                                transition={{ duration: 0.22 }}>
+                                <PrayerTab />
+                            </motion.div>
+                        ) : (
+                            <motion.div key="dinigunler"
+                                initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }}
+                                transition={{ duration: 0.22 }}>
+                                <ReligiousDaysTab />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </main>
+            </div>
+
+            {/* ── SEO SECTION ── */}
+            <section className="w-full shrink-0 border-t border-foreground/5 bg-background/40 backdrop-blur-3xl py-20 pb-32 relative z-10">
+                <article className="max-w-3xl mx-auto px-6 text-foreground/80 flex flex-col gap-8">
+                    <div className="space-y-3">
+                        <h2 className="text-2xl font-bold tracking-tight text-foreground">İl İl Ezan Vakitleri ve Dini Günler Takvimi</h2>
+                        <p className="text-[15px] leading-relaxed opacity-90">
+                            İbadetlerinizi vaktinde yerine getirmek için ihtiyacınız olan tüm bilgilere <strong>VakitHane Namaz Vakitleri</strong> sayfasından ulaşabilirsiniz. İstanbul, Ankara, İzmir ve tüm Türkiye illeri için Diyanet İşleri Başkanlığı verileriyle uyumlu <strong>imsak, güneş, öğle, ikindi, akşam ve yatsı</strong> vakitlerini anlık olarak takip edin.
+                        </p>
+                    </div>
+                    <div className="space-y-3">
+                        <h3 className="text-xl font-bold tracking-tight text-foreground">İftar Sayacı ve Hicri Tarih Bilgisi</h3>
+                        <p className="text-[15px] leading-relaxed opacity-90">
+                            Modern ve sade arayüzümüz üzerinden sadece bugünkü vakitleri değil, yaklaşan <strong>Kadir Gecesi, Ramazan Bayramı, Kurban Bayramı</strong> gibi dini gün ve gecelere ne kadar süre kaldığını da görebilirsiniz. Miladi tarihin yanı sıra Hicri takvim desteğiyle manevi takviminizi her an yanınızda taşıyın.
+                        </p>
+                    </div>
+                </article>
+            </section>
 
             <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none">
                 <div className="pointer-events-auto"><TabBar /></div>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { StatsWidget } from "@/components/StatsWidget";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -101,7 +100,6 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen">
-        <StatsWidget />
         {children}
       </body>
     </html>

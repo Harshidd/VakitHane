@@ -102,244 +102,255 @@ export default function Home() {
   const setMins = (m: number) => applyTime(Math.floor(initialTime / 3600) * 3600 + m * 60, null);
 
   return (
-    <div className="bg-mesh-default relative flex flex-col h-screen overflow-hidden">
-      <RippleBackground />
+    <div className="bg-mesh-default relative flex flex-col min-h-screen overflow-y-auto overflow-x-hidden scrollbar-hide">
+      <div className="flex flex-col min-h-screen shrink-0 relative z-10 w-full">
+        <RippleBackground />
 
-      {/* ── HEADER ── */}
-      {!isRunning && (
-        <header className="w-full flex items-center justify-between px-5 py-2.5 z-50 relative shrink-0">
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="group flex items-center gap-2 cursor-pointer">
-              <div className="bg-foreground text-background p-2 rounded-xl group-hover:rotate-12 transition-transform shadow-md">
-                <Timer size={14} />
+        {/* ── HEADER ── */}
+        {!isRunning && (
+          <header className="w-full flex items-center justify-between px-5 py-2.5 z-50 relative shrink-0">
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="group flex items-center gap-2 cursor-pointer">
+                <div className="bg-foreground text-background p-2 rounded-xl group-hover:rotate-12 transition-transform shadow-md">
+                  <Timer size={14} />
+                </div>
+                <span className="font-bold text-[15px] tracking-tight hidden sm:block">VakitHane</span>
               </div>
-              <span className="font-bold text-[15px] tracking-tight hidden sm:block">VakitHane</span>
             </div>
-            {stats.sessions > 0 && (
+
+
+            <TabBar inline />
+
+            <div className="flex gap-1 items-center shrink-0">
+              <button className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100">
+                <Settings size={14} />
+              </button>
+              <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100">
+                {isDark ? <Sun size={14} /> : <Moon size={14} />}
+              </button>
+            </div>
+          </header>
+        )}
+
+        {/* ── BODY ── */}
+        <main className="flex-1 flex items-center justify-center relative z-10 px-3 sm:px-6 min-h-0 overflow-hidden">
+          <AnimatePresence mode="wait">
+
+            {/* ── SETUP VIEW ── */}
+            {!isRunning && (
               <motion.div
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl glass border border-foreground/10 text-xs font-semibold text-foreground/60"
+                key="setup"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="w-full max-w-7xl flex items-center justify-center gap-4 lg:gap-5"
               >
-                <Flame size={11} className="text-orange-400" />
-                <span>{stats.sessions} seans</span>
-                <span className="opacity-40">·</span>
-                <Clock4 size={11} className="opacity-60" />
-                <span>{formatTotal(stats.totalSeconds)}</span>
-              </motion.div>
-            )}
-          </div>
-
-          <TabBar inline />
-
-          <div className="flex gap-1 items-center shrink-0">
-            <button className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100">
-              <Settings size={14} />
-            </button>
-            <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100">
-              {isDark ? <Sun size={14} /> : <Moon size={14} />}
-            </button>
-          </div>
-        </header>
-      )}
-
-      {/* ── BODY ── */}
-      <main className="flex-1 flex items-center justify-center relative z-10 px-3 sm:px-6 min-h-0 overflow-hidden">
-        <AnimatePresence mode="wait">
-
-          {/* ── SETUP VIEW ── */}
-          {!isRunning && (
-            <motion.div
-              key="setup"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="w-full max-w-7xl flex items-center justify-center gap-4 lg:gap-5"
-            >
-              {/* LEFT CARDS */}
-              <div className="hidden lg:flex flex-col gap-3 w-52 xl:w-60 shrink-0">
-                {CATEGORIES.filter(c => c.side === "left").map(cat => (
-                  <CatCard key={cat.id} cat={cat} />
-                ))}
-              </div>
-
-              {/* ── CENTER ── */}
-              <div className="flex flex-col items-center shrink-0">
-                <div className="relative flex items-center justify-center" style={{ width: CLOCK_SIZE, height: CLOCK_SIZE }}>
-                  <ProgressArc progress={isPaused ? progress : 1} size={CLOCK_SIZE} />
-                  <VintageWallClock className="w-full h-full" />
+                {/* LEFT CARDS */}
+                <div className="hidden lg:flex flex-col gap-3 w-52 xl:w-60 shrink-0">
+                  {CATEGORIES.filter(c => c.side === "left").map(cat => (
+                    <CatCard key={cat.id} cat={cat} />
+                  ))}
                 </div>
 
-                {/* ── Control band — preset groups + inputs + start ── */}
-                <div className="mt-7 flex items-stretch gap-0 glass border border-foreground/12 rounded-2xl overflow-hidden shadow-lg">
-
-                  {/* LGS group */}
-                  <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
-                    <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">LGS</span>
-                    <div className="flex gap-1.5">
-                      {PRESET_GROUPS[0].items.map(p => {
-                        const idx = PRESETS.findIndex(x => x.label === p.label);
-                        return (
-                          <button key={p.label} onClick={() => applyTime(p.seconds, idx)}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${activePreset === idx
-                              ? "bg-foreground text-background border-foreground"
-                              : "border-foreground/15 text-foreground/55 hover:text-foreground hover:border-foreground/40 hover:bg-foreground/8"
-                              }`}>{p.label}
-                          </button>
-                        );
-                      })}
-                    </div>
+                {/* ── CENTER ── */}
+                <div className="flex flex-col items-center shrink-0">
+                  <div className="relative flex items-center justify-center" style={{ width: CLOCK_SIZE, height: CLOCK_SIZE }}>
+                    <ProgressArc progress={isPaused ? progress : 1} size={CLOCK_SIZE} />
+                    <VintageWallClock className="w-full h-full" />
                   </div>
 
-                  {/* YKS group */}
-                  <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
-                    <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">YKS</span>
-                    <div className="flex gap-1.5">
-                      {PRESET_GROUPS[1].items.map(p => {
-                        const idx = PRESETS.findIndex(x => x.label === p.label);
-                        return (
-                          <button key={p.label} onClick={() => applyTime(p.seconds, idx)}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${activePreset === idx
-                              ? "bg-foreground text-background border-foreground"
-                              : "border-foreground/15 text-foreground/55 hover:text-foreground hover:border-foreground/40 hover:bg-foreground/8"
-                              }`}>{p.label}
-                          </button>
-                        );
-                      })}
+                  {/* ── Control band — preset groups + inputs + start ── */}
+                  <div className="mt-7 flex items-stretch gap-0 glass border border-foreground/12 rounded-2xl overflow-hidden shadow-lg">
+
+                    {/* LGS group */}
+                    <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
+                      <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">LGS</span>
+                      <div className="flex gap-1.5">
+                        {PRESET_GROUPS[0].items.map(p => {
+                          const idx = PRESETS.findIndex(x => x.label === p.label);
+                          return (
+                            <button key={p.label} onClick={() => applyTime(p.seconds, idx)}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${activePreset === idx
+                                ? "bg-foreground text-background border-foreground"
+                                : "border-foreground/15 text-foreground/55 hover:text-foreground hover:border-foreground/40 hover:bg-foreground/8"
+                                }`}>{p.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* YKS group */}
+                    <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
+                      <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">YKS</span>
+                      <div className="flex gap-1.5">
+                        {PRESET_GROUPS[1].items.map(p => {
+                          const idx = PRESETS.findIndex(x => x.label === p.label);
+                          return (
+                            <button key={p.label} onClick={() => applyTime(p.seconds, idx)}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${activePreset === idx
+                                ? "bg-foreground text-background border-foreground"
+                                : "border-foreground/15 text-foreground/55 hover:text-foreground hover:border-foreground/40 hover:bg-foreground/8"
+                                }`}>{p.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Custom hour:min */}
+                    <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
+                      <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">Özel Süre</span>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number" min="0" max="23"
+                          value={initialTime > 0 ? (Math.floor(initialTime / 3600) || "") : ""}
+                          placeholder="00"
+                          className="w-12 py-1.5 rounded-xl bg-foreground/5 border border-foreground/15 text-center font-bold text-sm outline-none focus:ring-1 focus:ring-foreground/25 hover:bg-foreground/10 transition-all"
+                          onChange={e => setHours(Number(e.target.value) || 0)}
+                        />
+                        <span className="text-foreground/30 font-bold">:</span>
+                        <input
+                          type="number" min="0" max="59"
+                          value={initialTime > 0 ? (Math.floor((initialTime % 3600) / 60) || "") : ""}
+                          placeholder="00"
+                          className="w-12 py-1.5 rounded-xl bg-foreground/5 border border-foreground/15 text-center font-bold text-sm outline-none focus:ring-1 focus:ring-foreground/25 hover:bg-foreground/10 transition-all"
+                          onChange={e => setMins(Number(e.target.value) || 0)}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Start button — prominent */}
+                    <div className="flex items-center px-4 py-3">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={start}
+                        disabled={timeLeft === 0}
+                        className={`px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all shadow-md ${timeLeft === 0
+                          ? "bg-foreground/15 text-foreground/25 cursor-not-allowed"
+                          : "bg-foreground text-background shadow-foreground/25 hover:shadow-foreground/40 hover:scale-[1.02]"
+                          }`}
+                      >
+                        <Play fill="currentColor" size={15} />
+                        Başlat
+                      </motion.button>
                     </div>
                   </div>
+                </div>
 
-                  {/* Custom hour:min */}
-                  <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
-                    <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">Özel Süre</span>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number" min="0" max="23"
-                        value={initialTime > 0 ? (Math.floor(initialTime / 3600) || "") : ""}
-                        placeholder="00"
-                        className="w-12 py-1.5 rounded-xl bg-foreground/5 border border-foreground/15 text-center font-bold text-sm outline-none focus:ring-1 focus:ring-foreground/25 hover:bg-foreground/10 transition-all"
-                        onChange={e => setHours(Number(e.target.value) || 0)}
-                      />
-                      <span className="text-foreground/30 font-bold">:</span>
-                      <input
-                        type="number" min="0" max="59"
-                        value={initialTime > 0 ? (Math.floor((initialTime % 3600) / 60) || "") : ""}
-                        placeholder="00"
-                        className="w-12 py-1.5 rounded-xl bg-foreground/5 border border-foreground/15 text-center font-bold text-sm outline-none focus:ring-1 focus:ring-foreground/25 hover:bg-foreground/10 transition-all"
-                        onChange={e => setMins(Number(e.target.value) || 0)}
-                      />
-                    </div>
+                {/* RIGHT CARDS */}
+                <div className="hidden lg:flex flex-col gap-3 w-52 xl:w-60 shrink-0">
+                  {CATEGORIES.filter(c => c.side === "right").map(cat => (
+                    <CatCard key={cat.id} cat={cat} />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* ── RUNNING VIEW ── */}
+            {isRunning && (
+              <motion.div
+                key="running"
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.85 }}
+                transition={{ type: "spring", damping: 22, stiffness: 180 }}
+                className="flex flex-col items-center justify-center w-full h-full fixed inset-0 bg-mesh-default z-50 px-4"
+              >
+                <RippleBackground withStars />
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="flex items-center gap-2 mb-6 opacity-35 tracking-widest uppercase text-xs font-bold">
+                    <Target size={14} className="animate-pulse" />
+                    Odaklanma Süreci
                   </div>
-
-                  {/* Start button — prominent */}
-                  <div className="flex items-center px-4 py-3">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={start}
-                      disabled={timeLeft === 0}
-                      className={`px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all shadow-md ${timeLeft === 0
-                        ? "bg-foreground/15 text-foreground/25 cursor-not-allowed"
-                        : "bg-foreground text-background shadow-foreground/25 hover:shadow-foreground/40 hover:scale-[1.02]"
-                        }`}
-                    >
-                      <Play fill="currentColor" size={15} />
-                      Başlat
+                  <div className="flex items-baseline justify-center font-bold tracking-tighter tabular-nums leading-none">
+                    {H > 0 && (
+                      <>
+                        <span className="text-[5rem] sm:text-[10rem] md:text-[14rem]">{pad(H)}</span>
+                        <span className="text-2xl sm:text-6xl md:text-8xl text-foreground/30 mx-2 sm:mx-4 -translate-y-3 sm:-translate-y-8">:</span>
+                      </>
+                    )}
+                    <span className="text-[5rem] sm:text-[10rem] md:text-[14rem]">{pad(M)}</span>
+                    <span className="text-2xl sm:text-6xl md:text-8xl text-foreground/30 mx-2 sm:mx-4 -translate-y-3 sm:-translate-y-8">:</span>
+                    <span className="text-[5rem] sm:text-[10rem] md:text-[14rem] text-foreground/70">{pad(S)}</span>
+                  </div>
+                  <div className="w-64 h-0.5 bg-foreground/10 rounded-full mt-6 overflow-hidden">
+                    <div className="h-full rounded-full transition-all duration-1000 ease-linear"
+                      style={{ background: progress > 0.5 ? "#22c55e" : progress > 0.2 ? "#f59e0b" : "#ef4444", width: `${progress * 100}%` }} />
+                  </div>
+                  <div className="flex items-center gap-3 mt-10">
+                    <motion.button whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }} onClick={stop}
+                      className="px-6 py-3 rounded-2xl glass border border-foreground/15 text-foreground font-semibold text-sm flex items-center gap-2 hover:bg-foreground/15 transition-all">
+                      <RotateCcw size={16} /> Durdur
+                    </motion.button>
+                    <motion.button whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }} onClick={pause}
+                      className="px-8 py-3 rounded-2xl bg-foreground text-background font-bold text-sm shadow-lg shadow-foreground/25 flex items-center gap-2">
+                      <Pause fill="currentColor" size={16} /> Duraklat
                     </motion.button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
+            )}
 
-              {/* RIGHT CARDS */}
-              <div className="hidden lg:flex flex-col gap-3 w-52 xl:w-60 shrink-0">
-                {CATEGORIES.filter(c => c.side === "right").map(cat => (
-                  <CatCard key={cat.id} cat={cat} />
-                ))}
-              </div>
-            </motion.div>
+          </AnimatePresence>
+
+          {/* MOBILE CARDS */}
+          {!isRunning && (
+            <div className="absolute bottom-10 left-0 right-0 grid grid-cols-2 gap-2 px-4 lg:hidden">
+              {CATEGORIES.slice(0, 4).map(cat => <CatCard key={cat.id} cat={cat} compact />)}
+            </div>
           )}
+        </main>
 
-          {/* ── RUNNING VIEW ── */}
-          {isRunning && (
+        {/* Pause banner */}
+        <AnimatePresence>
+          {isPaused && (
             <motion.div
-              key="running"
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.85 }}
-              transition={{ type: "spring", damping: 22, stiffness: 180 }}
-              className="flex flex-col items-center justify-center w-full h-full fixed inset-0 bg-mesh-default z-50 px-4"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+              className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 glass px-5 py-3 rounded-2xl shadow-xl border border-foreground/10"
             >
-              <RippleBackground withStars />
-              <div className="relative z-10 flex flex-col items-center">
-                <div className="flex items-center gap-2 mb-6 opacity-35 tracking-widest uppercase text-xs font-bold">
-                  <Target size={14} className="animate-pulse" />
-                  Odaklanma Süreci
-                </div>
-                <div className="flex items-baseline justify-center font-bold tracking-tighter tabular-nums leading-none">
-                  {H > 0 && (
-                    <>
-                      <span className="text-[5rem] sm:text-[10rem] md:text-[14rem]">{pad(H)}</span>
-                      <span className="text-2xl sm:text-6xl md:text-8xl text-foreground/30 mx-2 sm:mx-4 -translate-y-3 sm:-translate-y-8">:</span>
-                    </>
-                  )}
-                  <span className="text-[5rem] sm:text-[10rem] md:text-[14rem]">{pad(M)}</span>
-                  <span className="text-2xl sm:text-6xl md:text-8xl text-foreground/30 mx-2 sm:mx-4 -translate-y-3 sm:-translate-y-8">:</span>
-                  <span className="text-[5rem] sm:text-[10rem] md:text-[14rem] text-foreground/70">{pad(S)}</span>
-                </div>
-                <div className="w-64 h-0.5 bg-foreground/10 rounded-full mt-6 overflow-hidden">
-                  <div className="h-full rounded-full transition-all duration-1000 ease-linear"
-                    style={{ background: progress > 0.5 ? "#22c55e" : progress > 0.2 ? "#f59e0b" : "#ef4444", width: `${progress * 100}%` }} />
-                </div>
-                <div className="flex items-center gap-3 mt-10">
-                  <motion.button whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }} onClick={stop}
-                    className="px-6 py-3 rounded-2xl glass border border-foreground/15 text-foreground font-semibold text-sm flex items-center gap-2 hover:bg-foreground/15 transition-all">
-                    <RotateCcw size={16} /> Durdur
-                  </motion.button>
-                  <motion.button whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }} onClick={pause}
-                    className="px-8 py-3 rounded-2xl bg-foreground text-background font-bold text-sm shadow-lg shadow-foreground/25 flex items-center gap-2">
-                    <Pause fill="currentColor" size={16} /> Duraklat
-                  </motion.button>
-                </div>
-              </div>
+              <span className="text-sm font-bold opacity-70">Duraklatıldı — {pad(H)}:{pad(M)}:{pad(S)}</span>
+              <motion.button whileTap={{ scale: 0.95 }} onClick={start}
+                className="px-4 py-1.5 rounded-xl bg-foreground text-background text-xs font-bold flex items-center gap-1">
+                <Play fill="currentColor" size={12} /> Devam
+              </motion.button>
+              <motion.button whileTap={{ scale: 0.95 }} onClick={stop}
+                className="px-4 py-1.5 rounded-xl glass border border-foreground/15 text-xs font-semibold flex items-center gap-1">
+                <RotateCcw size={12} /> Sıfırla
+              </motion.button>
             </motion.div>
           )}
-
         </AnimatePresence>
 
-        {/* MOBILE CARDS */}
+        {/* Footer */}
         {!isRunning && (
-          <div className="absolute bottom-10 left-0 right-0 grid grid-cols-2 gap-2 px-4 lg:hidden">
-            {CATEGORIES.slice(0, 4).map(cat => <CatCard key={cat.id} cat={cat} compact />)}
-          </div>
+          <footer className="w-full flex justify-center py-2 relative z-10 shrink-0">
+            <span className="text-[9px] text-foreground/18 font-medium tracking-[0.22em] uppercase select-none">
+              design by <span className="font-bold text-foreground/30">MRK</span>
+            </span>
+          </footer>
         )}
-      </main>
+      </div>
 
-      {/* Pause banner */}
-      <AnimatePresence>
-        {isPaused && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 glass px-5 py-3 rounded-2xl shadow-xl border border-foreground/10"
-          >
-            <span className="text-sm font-bold opacity-70">Duraklatıldı — {pad(H)}:{pad(M)}:{pad(S)}</span>
-            <motion.button whileTap={{ scale: 0.95 }} onClick={start}
-              className="px-4 py-1.5 rounded-xl bg-foreground text-background text-xs font-bold flex items-center gap-1">
-              <Play fill="currentColor" size={12} /> Devam
-            </motion.button>
-            <motion.button whileTap={{ scale: 0.95 }} onClick={stop}
-              className="px-4 py-1.5 rounded-xl glass border border-foreground/15 text-xs font-semibold flex items-center gap-1">
-              <RotateCcw size={12} /> Sıfırla
-            </motion.button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Footer */}
+      {/* ── SEO SECTION ── */}
       {!isRunning && (
-        <footer className="w-full flex justify-center py-2 relative z-10 shrink-0">
-          <span className="text-[9px] text-foreground/18 font-medium tracking-[0.22em] uppercase select-none">
-            design by <span className="font-bold text-foreground/30">MRK</span>
-          </span>
-        </footer>
+        <section className="w-full shrink-0 border-t border-foreground/5 bg-background/40 backdrop-blur-3xl py-20 pb-32 relative z-10">
+          <article className="max-w-3xl mx-auto px-6 text-foreground/80 flex flex-col gap-8">
+            <div className="space-y-3">
+              <h1 className="text-2xl font-bold tracking-tight text-foreground">VakitHane: Online Zamanlayıcı ve Pomodoro Sayacı</h1>
+              <p className="text-[15px] leading-relaxed opacity-90">
+                VakitHane, <strong>LGS, YKS, TYT, AYT</strong> gibi büyük sınavlara hazırlanan öğrenciler ve <strong>Pomodoro</strong> tekniği ile çalışma verimini artırmak isteyen herkes için tasarlanmış ücretsiz bir <strong>online zamanlayıcıdır</strong>. Kendi belirlediğiniz odaklanma süresiyle veya hazır sınav şablonlarıyla hedeflerinize emin adımlarla ilerleyebilirsiniz.
+              </p>
+            </div>
+            <div className="space-y-3">
+              <h2 className="text-xl font-bold tracking-tight text-foreground">Sınava Özel Süreler ve Minimalist Tasarım</h2>
+              <p className="text-[15px] leading-relaxed opacity-90">
+                Sözel 75 dk, Sayısal 80 dk, TYT 165 dk ve AYT 180 dk gibi hazır süre butonlarımızı kullanarak gerçek sınav deneyimine uygun zaman tutabilirsiniz. Apple standartlarında tasarlanmış temiz, reklamsız ve koyu mod destekli arayüzümüz sayesinde dikkatiniz dağılmaz. Zamanın kontrolünü elinize alın ve VakitHane ile maksimum odaklanmaya ulaşın.
+              </p>
+            </div>
+          </article>
+        </section>
       )}
+
     </div>
   );
 }

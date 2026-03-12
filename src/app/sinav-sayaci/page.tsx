@@ -54,108 +54,127 @@ export default function SinavSayaciPage() {
     const quote = MOTIVATIONS[dayOfYear % MOTIVATIONS.length];
 
     return (
-        <div className="bg-mesh-default min-h-screen flex flex-col overflow-hidden">
+        <div className="bg-mesh-default min-h-screen overflow-y-auto overflow-x-hidden scrollbar-hide">
+            <div className="flex flex-col min-h-screen shrink-0 w-full relative z-10">
+                {/* Tab selector as page header */}
+                <header className="sticky top-0 z-30 flex justify-center pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5">
+                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md overflow-x-auto scrollbar-hide">
+                        {EXAMS.map(ex => (
+                            <button key={ex.id} onClick={() => setSelectedId(ex.id)}
+                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${selectedId === ex.id
+                                    ? "bg-foreground text-background shadow-sm"
+                                    : "text-foreground/45 hover:text-foreground"
+                                    }`}>
+                                <span>{ex.emoji}</span> {ex.name}
+                            </button>
+                        ))}
+                    </div>
+                </header>
 
-            {/* Tab selector as page header */}
-            <header className="sticky top-0 z-30 flex justify-center pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5">
-                <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md overflow-x-auto scrollbar-hide">
-                    {EXAMS.map(ex => (
-                        <button key={ex.id} onClick={() => setSelectedId(ex.id)}
-                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${selectedId === ex.id
-                                ? "bg-foreground text-background shadow-sm"
-                                : "text-foreground/45 hover:text-foreground"
-                                }`}>
-                            <span>{ex.emoji}</span> {ex.name}
-                        </button>
-                    ))}
-                </div>
-            </header>
+                <main className="flex-1 flex flex-col items-center justify-center px-4 py-6 pb-24 gap-6 relative z-10">
 
-            <main className="flex-1 flex flex-col items-center justify-center px-4 py-6 pb-24 gap-6 relative z-10">
-
-                {/* Motivasyon alıntı */}
-                <motion.div
-                    key={quote}
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-start gap-2 max-w-xl text-center px-4"
-                >
-                    <Sparkles size={14} className="text-foreground/25 shrink-0 mt-0.5" />
-                    <p className="text-xs font-medium text-foreground/40 italic leading-relaxed">{quote}</p>
-                    <Sparkles size={14} className="text-foreground/25 shrink-0 mt-0.5" />
-                </motion.div>
-
-                {/* Sınav başlık */}
-                <AnimatePresence mode="wait">
+                    {/* Motivasyon alıntı */}
                     <motion.div
-                        key={exam.id}
-                        initial={{ opacity: 0, scale: 0.94 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.94 }}
-                        transition={{ duration: 0.3 }}
-                        className="w-full max-w-xl flex flex-col items-center gap-5"
+                        key={quote}
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-start gap-2 max-w-xl text-center px-4"
                     >
-                        {/* Exam info */}
-                        <div className="flex flex-col items-center gap-1 text-center">
-                            <div className="flex items-center gap-2 text-foreground/50 text-[13px] font-semibold tracking-wide">
-                                <Target size={14} />
-                                Hedefe Kalan Süre
-                            </div>
-                            <h1 className="text-3xl font-bold tracking-tight">{exam.name}</h1>
-                            <p className="text-xs text-foreground/35 font-medium">
-                                {exam.date.toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
-                            </p>
-                        </div>
-
-                        {/* Countdown blocks */}
-                        <div className="grid grid-cols-4 gap-3 w-full">
-                            {[
-                                { label: "Gün", value: t.days },
-                                { label: "Saat", value: t.hours },
-                                { label: "Dakika", value: t.minutes },
-                                { label: "Saniye", value: t.seconds },
-                            ].map(({ label, value }, i) => (
-                                <div key={i}
-                                    className="flex flex-col items-center gap-2 glass-panel py-6 px-2 rounded-2xl border border-foreground/10 relative overflow-hidden">
-                                    {/* Accent top line */}
-                                    <div className="absolute top-0 left-0 right-0 h-0.5 opacity-60 rounded-full"
-                                        style={{ background: exam.color }} />
-                                    <span className="text-5xl sm:text-6xl font-bold tabular-nums tracking-tighter"
-                                        style={{ fontVariantNumeric: "tabular-nums" }}>
-                                        {pad(value)}
-                                    </span>
-                                    <span className="text-[12px] font-medium tracking-wide text-foreground/50">{label}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Progress bar */}
-                        {(() => {
-                            const totalDays = Math.max(1, Math.ceil((exam.date.getTime() - new Date("2026-01-01").getTime()) / 86_400_000));
-                            const remainDays = t.days;
-                            const pct = Math.max(0, Math.min(100, 100 - (remainDays / totalDays * 100)));
-                            return (
-                                <div className="w-full">
-                                    <div className="flex justify-between text-[12px] text-foreground/45 font-medium tracking-wide mb-1.5">
-                                        <span className="flex items-center gap-1"><BookOpen size={10} /> Geçen süre</span>
-                                        <span>{pct.toFixed(1)}%</span>
-                                    </div>
-                                    <div className="h-1.5 bg-foreground/8 rounded-full overflow-hidden">
-                                        <motion.div
-                                            initial={{ width: 0 }}
-                                            animate={{ width: `${pct}%` }}
-                                            transition={{ duration: 1, ease: "easeOut" }}
-                                            className="h-full rounded-full"
-                                            style={{ background: exam.color }}
-                                        />
-                                    </div>
-                                </div>
-                            );
-                        })()}
-
+                        <Sparkles size={14} className="text-foreground/25 shrink-0 mt-0.5" />
+                        <p className="text-xs font-medium text-foreground/40 italic leading-relaxed">{quote}</p>
+                        <Sparkles size={14} className="text-foreground/25 shrink-0 mt-0.5" />
                     </motion.div>
-                </AnimatePresence>
-            </main>
+
+                    {/* Sınav başlık */}
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={exam.id}
+                            initial={{ opacity: 0, scale: 0.94 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.94 }}
+                            transition={{ duration: 0.3 }}
+                            className="w-full max-w-xl flex flex-col items-center gap-5"
+                        >
+                            {/* Exam info */}
+                            <div className="flex flex-col items-center gap-1 text-center">
+                                <div className="flex items-center gap-2 text-foreground/50 text-[13px] font-semibold tracking-wide">
+                                    <Target size={14} />
+                                    Hedefe Kalan Süre
+                                </div>
+                                <h1 className="text-3xl font-bold tracking-tight">{exam.name}</h1>
+                                <p className="text-xs text-foreground/35 font-medium">
+                                    {exam.date.toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                                </p>
+                            </div>
+
+                            {/* Countdown blocks */}
+                            <div className="grid grid-cols-4 gap-3 w-full">
+                                {[
+                                    { label: "Gün", value: t.days },
+                                    { label: "Saat", value: t.hours },
+                                    { label: "Dakika", value: t.minutes },
+                                    { label: "Saniye", value: t.seconds },
+                                ].map(({ label, value }, i) => (
+                                    <div key={i}
+                                        className="flex flex-col items-center gap-2 glass-panel py-6 px-2 rounded-2xl border border-foreground/10 relative overflow-hidden">
+                                        {/* Accent top line */}
+                                        <div className="absolute top-0 left-0 right-0 h-0.5 opacity-60 rounded-full"
+                                            style={{ background: exam.color }} />
+                                        <span className="text-5xl sm:text-6xl font-bold tabular-nums tracking-tighter"
+                                            style={{ fontVariantNumeric: "tabular-nums" }}>
+                                            {pad(value)}
+                                        </span>
+                                        <span className="text-[12px] font-medium tracking-wide text-foreground/50">{label}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Progress bar */}
+                            {(() => {
+                                const totalDays = Math.max(1, Math.ceil((exam.date.getTime() - new Date("2026-01-01").getTime()) / 86_400_000));
+                                const remainDays = t.days;
+                                const pct = Math.max(0, Math.min(100, 100 - (remainDays / totalDays * 100)));
+                                return (
+                                    <div className="w-full">
+                                        <div className="flex justify-between text-[12px] text-foreground/45 font-medium tracking-wide mb-1.5">
+                                            <span className="flex items-center gap-1"><BookOpen size={10} /> Geçen süre</span>
+                                            <span>{pct.toFixed(1)}%</span>
+                                        </div>
+                                        <div className="h-1.5 bg-foreground/8 rounded-full overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                animate={{ width: `${pct}%` }}
+                                                transition={{ duration: 1, ease: "easeOut" }}
+                                                className="h-full rounded-full"
+                                                style={{ background: exam.color }}
+                                            />
+                                        </div>
+                                    </div>
+                                );
+                            })()}
+
+                        </motion.div>
+                    </AnimatePresence>
+                </main>
+            </div>
+
+            {/* ── SEO SECTION ── */}
+            <section className="w-full shrink-0 border-t border-foreground/5 bg-background/40 backdrop-blur-3xl py-20 pb-32 relative z-10">
+                <article className="max-w-3xl mx-auto px-6 text-foreground/80 flex flex-col gap-8">
+                    <div className="space-y-3">
+                        <h2 className="text-2xl font-bold tracking-tight text-foreground">YKS, LGS ve KPSS'ye Kaç Gün Kaldı?</h2>
+                        <p className="text-[15px] leading-relaxed opacity-90">
+                            Hedeflerinize ulaşmak için çıktığınız yolda zaman yönetimi en önemli anahtardır. VakitHane sınav geri sayım sayacı sayesinde <strong>YKS 2026, LGS, KPSS</strong> ve <strong>ALES</strong> gibi Türkiye'nin en büyük sınavlarına saniyesi saniyesine ne kadar süre kaldığını takip edebilirsiniz.
+                        </p>
+                    </div>
+                    <div className="space-y-3">
+                        <h3 className="text-xl font-bold tracking-tight text-foreground">Motivasyonunuzu Yüksek Tutun</h3>
+                        <p className="text-[15px] leading-relaxed opacity-90">
+                            Sayfada yer alan motivasyon alıntıları ve sınavınıza kalan sürenin grafiksel gösterimi (yüzdelik ilerleme çubuğu), stresinizi azaltırken çalışmalara daha iyi odaklanmanızı sağlar. Reklamsız, koyu mod destekli pürüzsüz arayüzümüzle sınav stresinden uzaklaşır, gözünüzü hedefinize dikersiniz.
+                        </p>
+                    </div>
+                </article>
+            </section>
 
             {/* TabBar */}
             <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none">

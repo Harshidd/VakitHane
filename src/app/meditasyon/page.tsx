@@ -143,97 +143,116 @@ export default function MeditasyonPage() {
     const fmtTotal = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
 
     return (
-        <div className="bg-mesh-default h-screen flex flex-col overflow-hidden">
-
-            {/* Program selector header */}
-            <header className="flex-none flex justify-center pt-2 pb-2 backdrop-blur-md bg-background/70 border-b border-foreground/5 z-30">
-                <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
-                    {PROGRAMS.map(p => (
-                        <button key={p.id} onClick={() => setProgramId(p.id)}
-                            className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all whitespace-nowrap ${programId === p.id
-                                ? "bg-foreground text-background shadow-sm"
-                                : "text-foreground/45 hover:text-foreground"
-                                }`}>
-                            <span>{p.label}</span>
-                        </button>
-                    ))}
-                </div>
-            </header>
-
-            <main className="flex-1 flex flex-col items-center justify-start px-4 pt-4 pb-24 gap-4 relative z-10 w-full max-w-xl mx-auto min-h-0">
-
-                {/* Zen quote (Moved to TOP, styled like EXAMS tab) */}
-                <motion.div
-                    key={quote}
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-start justify-center gap-2 text-center w-full px-2"
-                >
-                    <Sparkles size={16} className="text-foreground/25 shrink-0 mt-0.5" />
-                    <p className="text-sm font-medium text-foreground/50 italic leading-relaxed">"{quote}"</p>
-                    <Sparkles size={16} className="text-foreground/25 shrink-0 mt-0.5" />
-                </motion.div>
-
-
-
-                {/* Breathing circle — Interactive & Centralized */}
-                <div className="relative flex-1 flex items-center justify-center min-h-0 w-full shrink-0">
-                    {/* Colored ring behind the circle */}
-                    <div className="absolute rounded-full blur-[40px] opacity-20 transition-colors duration-1000 pointer-events-none"
-                        style={{ background: program.color, width: 280, height: 280 }} />
-
-                    <BreathingCircle
-                        running={running}
-                        phaseLabel={activeLabel}
-                        phaseDur={currentPhaseDur}
-                        color={program.color}
-                        timeRemain={timeRemain}
-                        onClick={() => setRunning(r => !r)}
-                    />
-                </div>
-
-                {/* Stats & Reset Row */}
-                <div className="flex items-center gap-8 shrink-0 mt-4 mb-4">
-                    <div className="text-center">
-                        <div className="text-2xl font-bold tabular-nums h-8 flex items-center justify-center">{cycles}</div>
-                        <div className="text-[12px] font-semibold tracking-wide text-foreground/45 mt-1">Döngü</div>
+        <div className="bg-mesh-default min-h-screen overflow-y-auto overflow-x-hidden scrollbar-hide">
+            <div className="flex flex-col min-h-screen shrink-0 relative z-10 w-full">
+                {/* Program selector header */}
+                <header className="flex-none flex justify-center pt-2 pb-2 backdrop-blur-md bg-background/70 border-b border-foreground/5 z-30">
+                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
+                        {PROGRAMS.map(p => (
+                            <button key={p.id} onClick={() => setProgramId(p.id)}
+                                className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all whitespace-nowrap ${programId === p.id
+                                    ? "bg-foreground text-background shadow-sm"
+                                    : "text-foreground/45 hover:text-foreground"
+                                    }`}>
+                                <span>{p.label}</span>
+                            </button>
+                        ))}
                     </div>
-                    <div className="w-px h-8 bg-foreground/10" />
+                </header>
 
-                    <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={reset}
-                        className="p-4 rounded-full glass border border-foreground/15 hover:bg-foreground/15 transition-colors text-foreground/60 hover:text-foreground">
-                        <RotateCcw size={20} />
-                    </motion.button>
+                <main className="flex-1 flex flex-col items-center justify-start px-4 pt-4 pb-24 gap-4 relative z-10 w-full max-w-xl mx-auto min-h-0">
 
-                    <div className="w-px h-8 bg-foreground/10" />
-                    <div className="text-center">
-                        <div className="text-2xl font-bold tabular-nums h-8 flex items-center justify-center">{fmtTotal(totalSecs)}</div>
-                        <div className="text-[12px] font-semibold tracking-wide text-foreground/45 mt-1">Süre</div>
+                    {/* Zen quote (Moved to TOP, styled like EXAMS tab) */}
+                    <motion.div
+                        key={quote}
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-start justify-center gap-2 text-center w-full px-2"
+                    >
+                        <Sparkles size={16} className="text-foreground/25 shrink-0 mt-0.5" />
+                        <p className="text-sm font-medium text-foreground/50 italic leading-relaxed">"{quote}"</p>
+                        <Sparkles size={16} className="text-foreground/25 shrink-0 mt-0.5" />
+                    </motion.div>
+
+
+
+                    {/* Breathing circle — Interactive & Centralized */}
+                    <div className="relative flex-1 flex items-center justify-center min-h-0 w-full shrink-0">
+                        {/* Colored ring behind the circle */}
+                        <div className="absolute rounded-full blur-[40px] opacity-20 transition-colors duration-1000 pointer-events-none"
+                            style={{ background: program.color, width: 280, height: 280 }} />
+
+                        <BreathingCircle
+                            running={running}
+                            phaseLabel={activeLabel}
+                            phaseDur={currentPhaseDur}
+                            color={program.color}
+                            timeRemain={timeRemain}
+                            onClick={() => setRunning(r => !r)}
+                        />
                     </div>
+
+                    {/* Stats & Reset Row */}
+                    <div className="flex items-center gap-8 shrink-0 mt-4 mb-4">
+                        <div className="text-center">
+                            <div className="text-2xl font-bold tabular-nums h-8 flex items-center justify-center">{cycles}</div>
+                            <div className="text-[12px] font-semibold tracking-wide text-foreground/45 mt-1">Döngü</div>
+                        </div>
+                        <div className="w-px h-8 bg-foreground/10" />
+
+                        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={reset}
+                            className="p-4 rounded-full glass border border-foreground/15 hover:bg-foreground/15 transition-colors text-foreground/60 hover:text-foreground">
+                            <RotateCcw size={20} />
+                        </motion.button>
+
+                        <div className="w-px h-8 bg-foreground/10" />
+                        <div className="text-center">
+                            <div className="text-2xl font-bold tabular-nums h-8 flex items-center justify-center">{fmtTotal(totalSecs)}</div>
+                            <div className="text-[12px] font-semibold tracking-wide text-foreground/45 mt-1">Süre</div>
+                        </div>
+                    </div>
+
+                </main>
+
+                {/* Floating Ambient Sounds (Right Side) */}
+                <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-3 pointer-events-auto">
+                    {SOUNDS.map(snd => {
+                        const Icon = snd.icon;
+                        const isActive = activeSound === snd.id;
+                        return (
+                            <button
+                                key={snd.id}
+                                onClick={() => toggleSound(snd.id)}
+                                className={`p-3 rounded-full transition-all flex items-center justify-center border shadow-lg ${isActive
+                                    ? "bg-foreground text-background border-transparent scale-110"
+                                    : "glass border-foreground/15 text-foreground/50 hover:bg-foreground/10 hover:text-foreground"
+                                    }`}
+                                title={snd.name}
+                            >
+                                <Icon size={20} className={isActive ? "opacity-90 animate-pulse" : "opacity-60"} />
+                            </button>
+                        );
+                    })}
                 </div>
-
-            </main>
-
-            {/* Floating Ambient Sounds (Right Side) */}
-            <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-3 pointer-events-auto">
-                {SOUNDS.map(snd => {
-                    const Icon = snd.icon;
-                    const isActive = activeSound === snd.id;
-                    return (
-                        <button
-                            key={snd.id}
-                            onClick={() => toggleSound(snd.id)}
-                            className={`p-3 rounded-full transition-all flex items-center justify-center border shadow-lg ${isActive
-                                ? "bg-foreground text-background border-transparent scale-110"
-                                : "glass border-foreground/15 text-foreground/50 hover:bg-foreground/10 hover:text-foreground"
-                                }`}
-                            title={snd.name}
-                        >
-                            <Icon size={20} className={isActive ? "opacity-90 animate-pulse" : "opacity-60"} />
-                        </button>
-                    );
-                })}
             </div>
+
+            {/* ── SEO SECTION ── */}
+            <section className="w-full shrink-0 border-t border-foreground/5 bg-background/40 backdrop-blur-3xl py-20 pb-32 relative z-10">
+                <article className="max-w-3xl mx-auto px-6 text-foreground/80 flex flex-col gap-8">
+                    <div className="space-y-3">
+                        <h2 className="text-2xl font-bold tracking-tight text-foreground">Doğa Sesleri Eşliğinde Nefes ve Meditasyon Egzersizleri</h2>
+                        <p className="text-[15px] leading-relaxed opacity-90">
+                            Yoğun bir günün ardından rahatlamak veya stresli anlarda sakinleşmek için doğru teknikle nefes almak hayati önem taşır. VakitHane meditasyon sekmesi, bilimsel olarak kanıtlanmış "<strong>4-7-8 Nefes Tekniği</strong>", "<strong>Kare Nefes (Box Breathing)</strong>" ve odaklanma egzersizlerini cihazınıza optimize edilmiş pürüzsüz animasyonlarla sizlere sunar.
+                        </p>
+                    </div>
+                    <div className="space-y-3">
+                        <h3 className="text-xl font-bold tracking-tight text-foreground">Görsel Yönlendirme ve Farkındalık (Mindfulness)</h3>
+                        <p className="text-[15px] leading-relaxed opacity-90">
+                            Gözünüzü yormayan minimalist yönergeler ve genişleyen çember animasyonumuz ile zihninizi boşaltın. Ortam Sesleri çubuğumuzdan sağladığımız <strong>Yağmur, Şömine, Rüzgar</strong> ortam sesleriyle ambiyansınızı tek tıkla değiştirebilir ve zen haline ulaşabilirsiniz. Modern App standartlarındaki bu pürüzsüz arayüz zihinsel yorgunluğunuzun en büyük ilacıdır.
+                        </p>
+                    </div>
+                </article>
+            </section>
 
             <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none">
                 <div className="pointer-events-auto"><TabBar /></div>
