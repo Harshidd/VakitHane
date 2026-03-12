@@ -148,8 +148,8 @@ function PrayerTab() {
                 <div className="flex items-center gap-1.5 glass border border-foreground/12 rounded-xl px-3 py-2.5 shrink-0">
                     <MapPin size={12} className="text-foreground/40" />
                     <select value={city} onChange={e => setCity(e.target.value)}
-                        className="bg-transparent text-sm font-bold outline-none cursor-pointer text-foreground/80">
-                        {CITIES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+                        className="bg-transparent text-sm font-bold outline-none cursor-pointer text-foreground/80 appearance-none pr-1">
+                        {CITIES.map(c => <option key={c.id} value={c.id} className="bg-background text-foreground">{c.label}</option>)}
                     </select>
                 </div>
 
@@ -159,8 +159,10 @@ function PrayerTab() {
                         <ChevronLeft size={16} />
                     </button>
                     <div className="text-center leading-snug">
-                        <div className="text-sm font-bold">{dayLabel}</div>
-                        {data && <div className="text-[10px] text-foreground/35 font-medium">{data.hijri}</div>}
+                        <div className="text-sm font-bold mb-0.5">{dayLabel}</div>
+                        {data && <div className="text-[10px] text-foreground/50 font-medium whitespace-nowrap">
+                            {displayDate.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })} <span className="opacity-40 px-0.5">·</span> {data.hijri}
+                        </div>}
                     </div>
                     <button onClick={() => setDayOffset(d => d + 1)}
                         className="p-1 rounded-lg hover:bg-foreground/10 transition-colors">
@@ -230,13 +232,13 @@ function PrayerTab() {
                             const isNext = key === nextKey && dayOffset === 0;
                             return (
                                 <div key={key}
-                                    className={`relative py-3.5 px-3 rounded-xl border transition-all ${isNext ? "glass-panel border-foreground/20 ring-2 ring-foreground/20" :
-                                            isPast ? "border-foreground/5 bg-foreground/3 opacity-35" :
-                                                "glass border-foreground/10 hover:border-foreground/20"
+                                    className={`relative py-4 px-3 rounded-2xl border transition-all ${isNext ? "glass-panel border-foreground/20 ring-2 ring-foreground/20" :
+                                        isPast ? "border-foreground/5 bg-foreground/3 opacity-35" :
+                                            "glass border-foreground/10 hover:border-foreground/20"
                                         }`}
                                 >
-                                    <div className="text-[9px] font-bold uppercase tracking-widest text-foreground/40 mb-1.5">{label}</div>
-                                    <div className="text-xl font-bold tabular-nums tracking-tight">{t}</div>
+                                    <div className="text-[9px] font-bold uppercase tracking-widest text-foreground/45 mb-1">{label}</div>
+                                    <div className="text-[26px] sm:text-3xl font-bold tabular-nums tracking-tighter leading-none">{t}</div>
                                     {isNext && (
                                         <span className="absolute top-2 right-2 text-[7px] bg-foreground/15 px-1.5 py-0.5 rounded-full font-bold text-foreground/55">
                                             ▶

@@ -1,13 +1,6 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
 import { StatsWidget } from "@/components/StatsWidget";
 import "./globals.css";
-
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-outfit",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://vakithane.com.tr"),
@@ -107,7 +100,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${outfit.variable} font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen`}>
+      <body className="font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen">
         <StatsWidget />
         {children}
       </body>
