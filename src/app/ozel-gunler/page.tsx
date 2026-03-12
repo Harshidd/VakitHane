@@ -1,173 +1,197 @@
 "use client";
 
-import { Navbar } from "@/components/Navbar";
-import { TabBar } from "@/components/TabBar";
-import { AmbientSoundPlayer } from "@/components/AmbientSoundPlayer";
-import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Trash2, Plus, Calendar } from "lucide-react";
+import { TabBar } from "@/components/TabBar";
+import { motion, AnimatePresence } from "framer-motion";
+import { Trash2, Plus, Calendar, Clock, Sparkles } from "lucide-react";
 
-interface SpecialEvent {
-    id: string;
-    name: string;
-    date: string;
+interface Event { id: string; name: string; date: string; emoji: string; }
+
+const EMOJIS = ["🎂", "🎉", "💍", "🏖️", "✈️", "🎓", "🏆", "💼", "🌟", "🎁", "❤️", "🎪"];
+
+const DEFAULT_EVENTS: Event[] = [
+    { id: "1", name: "Yeni Yıl 2027", date: "2027-01-01T00:00:00", emoji: "🎉" },
+    { id: "2", name: "Yaz Tatili", date: "2026-06-15T09:00:00", emoji: "🏖️" },
+];
+
+function getTimeLeft(dateStr: string): { text: string; urgent: boolean } {
+    const diff = new Date(dateStr).getTime() - Date.now();
+    if (diff <= 0) return { text: "Süresi doldu", urgent: false };
+    const d = Math.floor(diff / 86_400_000);
+    const h = Math.floor((diff / 3_600_000) % 24);
+    const m = Math.floor((diff / 60_000) % 60);
+    if (d > 0) return { text: `${d} gün ${h} saat`, urgent: d <= 7 };
+    if (h > 0) return { text: `${h} saat ${m} dk`, urgent: true };
+    return { text: `${m} dakika`, urgent: true };
 }
 
-export default function SpecialEventsPage() {
-    const [events, setEvents] = useState<SpecialEvent[]>([]);
-    const [eventName, setEventName] = useState("");
-    const [eventDate, setEventDate] = useState("");
-    const [isClient, setIsClient] = useState(false);
+const LS_KEY = "vakithane_ozel_gunler";
 
+export default function OzelGunlerPage() {
+    const [events, setEvents] = useState<Event[]>([]);
+    const [name, setName] = useState("");
+    const [date, setDate] = useState("");
+    const [emoji, setEmoji] = useState("🎉");
+    const [showForm, setShowForm] = useState(false);
+    const [tick, setTick] = useState(0);
+    const [ready, setReady] = useState(false);
+
+    // Load from localStorage
     useEffect(() => {
-        setIsClient(true);
-        const stored = localStorage.getItem("focasTimeEvents");
-        if (stored) {
-            setEvents(JSON.parse(stored));
-        } else {
-            // Default demo events
-            const defaultEvents = [
-                { id: "1", name: "2027 Yılbaşı", date: "2027-01-01T00:00:00" },
-            ];
-            setEvents(defaultEvents);
-            localStorage.setItem("focasTimeEvents", JSON.stringify(defaultEvents));
-        }
+        const stored = localStorage.getItem(LS_KEY);
+        setEvents(stored ? JSON.parse(stored) : DEFAULT_EVENTS);
+        setReady(true);
     }, []);
 
-    const handleAddEvent = () => {
-        if (!eventName || !eventDate) return;
+    // Tick every minute to refresh countdowns
+    useEffect(() => {
+        const id = setInterval(() => setTick(t => t + 1), 60_000);
+        return () => clearInterval(id);
+    }, []);
 
-        const newEvent: SpecialEvent = {
-            id: Date.now().toString(),
-            name: eventName,
-            date: eventDate,
-        };
-
-        const updatedEvents = [...events, newEvent].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        setEvents(updatedEvents);
-        localStorage.setItem("focasTimeEvents", JSON.stringify(updatedEvents));
-        setEventName("");
-        setEventDate("");
+    const save = (updated: Event[]) => {
+        setEvents(updated);
+        localStorage.setItem(LS_KEY, JSON.stringify(updated));
     };
 
-    const handleDelete = (id: string) => {
-        const updatedEvents = events.filter(e => e.id !== id);
-        setEvents(updatedEvents);
-        localStorage.setItem("focasTimeEvents", JSON.stringify(updatedEvents));
+    const add = () => {
+        if (!name.trim() || !date) return;
+        const updated = [...events, { id: Date.now().toString(), name: name.trim(), date, emoji }]
+            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        save(updated);
+        setName(""); setDate(""); setEmoji("🎉"); setShowForm(false);
     };
 
-    // Calculate time left
-    const getTimeLeft = (dateStr: string) => {
-        const difference = new Date(dateStr).getTime() - new Date().getTime();
-        if (difference < 0) return "Süresi Doldu";
-
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-
-        if (days > 0) return `${days} Gün, ${hours} Saat Kaldı`;
-
-        const minutes = Math.floor((difference / 1000 / 60) % 60);
-        return `${hours} Saat, ${minutes} Dakika Kaldı`;
-    };
+    const del = (id: string) => save(events.filter(e => e.id !== id));
 
     return (
-        <main className="min-h-screen bg-mesh-default relative flex flex-col items-center justify-start p-4 pt-32 pb-32 overflow-y-auto transition-colors duration-1000">
-            <Navbar />
+        <div className="bg-mesh-default min-h-screen flex flex-col overflow-hidden">
 
-            <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 px-4">
+            {/* Header */}
+            <header className="sticky top-0 z-30 flex items-center justify-between px-5 pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5">
+                <div className="flex items-center gap-2 text-foreground/50 text-xs font-bold uppercase tracking-widest">
+                    <Calendar size={13} /> Özel Günlerim
+                </div>
+                <button onClick={() => setShowForm(s => !s)}
+                    className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all ${showForm
+                            ? "bg-foreground text-background border-foreground"
+                            : "glass border-foreground/20 text-foreground/60 hover:text-foreground"
+                        }`}>
+                    <Plus size={13} />
+                    Ekle
+                </button>
+            </header>
 
-                {/* Form Section */}
-                <motion.div
-                    initial={{ scale: 0.95, opacity: 0, x: -20 }}
-                    animate={{ scale: 1, opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="glass-panel p-8 sm:p-12 flex flex-col items-start justify-center gap-6 h-fit sticky top-32"
-                >
-                    <div className="flex items-center gap-3 text-foreground/50 uppercase tracking-widest font-bold text-sm">
-                        <Calendar size={18} /> Etkinlik Oluştur
-                    </div>
+            <main className="flex-1 overflow-y-auto px-4 py-4 pb-24 max-w-xl mx-auto w-full">
 
-                    <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-2">
-                        Geri Sayım Başlat
-                    </h1>
-
-                    <div className="w-full">
-                        <input
-                            type="text"
-                            value={eventName}
-                            onChange={(e) => setEventName(e.target.value)}
-                            placeholder="Etkinlik Adı (Doğum Günü...)"
-                            className="w-full bg-foreground/5 border border-foreground/10 text-foreground rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 ring-foreground/20 mb-4 transition-all"
-                        />
-                        <input
-                            type="datetime-local"
-                            value={eventDate}
-                            onChange={(e) => setEventDate(e.target.value)}
-                            className="w-full bg-foreground/5 border border-foreground/10 text-foreground rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 ring-foreground/20 mb-8 transition-all"
-                        />
-                        <button
-                            onClick={handleAddEvent}
-                            disabled={!eventName || !eventDate}
-                            className="w-full flex items-center justify-center gap-2 bg-foreground text-background font-semibold text-lg py-4 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all disabled:opacity-50 disabled:hover:translate-y-0"
+                {/* Add form */}
+                <AnimatePresence>
+                    {showForm && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="overflow-hidden mb-4"
                         >
-                            <Plus size={20} /> Kaydet ve Başlat
-                        </button>
-                    </div>
-                </motion.div>
+                            <div className="glass-panel p-5 flex flex-col gap-3">
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/35 flex items-center gap-1">
+                                    <Sparkles size={10} /> Yeni Etkinlik
+                                </p>
 
-                {/* List Section */}
-                <motion.div
-                    initial={{ scale: 0.95, opacity: 0, x: 20 }}
-                    animate={{ scale: 1, opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: 0.1 }}
-                    className="flex flex-col gap-4"
-                >
-                    <div className="glass-panel p-6 pb-2 border-b-0 rounded-b-none bg-background/20 mb-[-1rem] z-20 sticky top-32">
-                        <h2 className="text-xl font-bold flex items-center gap-2">
-                            <Calendar className="text-foreground/50" /> Takvimim
-                        </h2>
-                    </div>
-                    <div className="space-y-4 pt-4 relative z-10">
-                        {isClient && events.length === 0 && (
-                            <div className="glass-panel p-8 text-center text-foreground/50 border border-dashed border-foreground/20 italic">
-                                Henüz bir etkinlik eklenmedi.
+                                {/* Emoji picker */}
+                                <div className="flex gap-1.5 flex-wrap">
+                                    {EMOJIS.map(em => (
+                                        <button key={em} onClick={() => setEmoji(em)}
+                                            className={`w-8 h-8 rounded-xl text-lg flex items-center justify-center transition-all ${emoji === em ? "bg-foreground/20 scale-110" : "hover:bg-foreground/10"
+                                                }`}>{em}</button>
+                                    ))}
+                                </div>
+
+                                <input type="text" value={name} onChange={e => setName(e.target.value)}
+                                    placeholder="Etkinlik adı..."
+                                    className="w-full glass border border-foreground/15 rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:ring-1 focus:ring-foreground/25 placeholder:text-foreground/25" />
+
+                                <input type="datetime-local" value={date} onChange={e => setDate(e.target.value)}
+                                    className="w-full glass border border-foreground/15 rounded-xl px-4 py-2.5 text-sm font-semibold outline-none focus:ring-1 focus:ring-foreground/25 text-foreground" />
+
+                                <div className="flex gap-2">
+                                    <button onClick={() => setShowForm(false)}
+                                        className="flex-1 py-2 rounded-xl glass border border-foreground/15 text-xs font-bold text-foreground/50 hover:text-foreground transition-colors">
+                                        Vazgeç
+                                    </button>
+                                    <button onClick={add} disabled={!name.trim() || !date}
+                                        className="flex-1 py-2 rounded-xl bg-foreground text-background text-xs font-bold flex items-center justify-center gap-1.5 disabled:opacity-30 transition-all">
+                                        <Plus size={13} /> Kaydet
+                                    </button>
+                                </div>
                             </div>
-                        )}
-                        <AnimatePresence>
-                            {isClient && events.map((event) => (
-                                <motion.div
-                                    key={event.id}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.95 }}
-                                    className="glass-panel p-6 flex flex-col gap-2 relative group overflow-hidden"
-                                >
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-foreground/5 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-foreground/10 transition-colors"></div>
-                                    <div className="flex justify-between items-start z-10">
-                                        <h3 className="text-xl font-bold truncate pr-8">{event.name}</h3>
-                                        <button
-                                            onClick={() => handleDelete(event.id)}
-                                            className="text-red-500/50 hover:text-red-500 hover:bg-red-500/10 p-2 rounded-xl transition-colors shrink-0"
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
-                                    </div>
-                                    <div className="text-foreground/50 font-medium text-sm flex items-center gap-2 z-10">
-                                        {new Date(event.date).toLocaleDateString("tr-TR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: "2-digit", minute: "2-digit" })}
-                                    </div>
-                                    <div className="mt-4 text-2xl font-black bg-gradient-to-r from-foreground to-foreground/50 bg-clip-text text-transparent z-10">
-                                        {getTimeLeft(event.date)}
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Event list */}
+                {ready && events.length === 0 && (
+                    <div className="glass-panel p-10 text-center text-foreground/30 text-sm border border-dashed border-foreground/15">
+                        Henüz etkinlik yok. <br />
+                        <span className="text-xs">Sağ üstten ekleyebilirsiniz.</span>
                     </div>
-                </motion.div>
+                )}
 
+                <div className="flex flex-col gap-3">
+                    <AnimatePresence initial={false}>
+                        {ready && events.map((ev) => {
+                            const { text, urgent } = getTimeLeft(ev.date);
+                            const isExpired = new Date(ev.date).getTime() < Date.now();
+                            return (
+                                <motion.div key={ev.id}
+                                    initial={{ opacity: 0, y: 12 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.93 }}
+                                    className={`glass-panel px-5 py-4 flex items-center gap-4 relative overflow-hidden ${isExpired ? "opacity-40" : ""}`}
+                                >
+                                    {/* Emoji */}
+                                    <span className="text-3xl shrink-0">{ev.emoji}</span>
+
+                                    {/* Info */}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="font-bold text-sm truncate">{ev.name}</div>
+                                        <div className="text-[10px] text-foreground/35 font-medium mt-0.5 flex items-center gap-1">
+                                            <Clock size={9} />
+                                            {new Date(ev.date).toLocaleDateString("tr-TR", {
+                                                day: "numeric", month: "long", year: "numeric",
+                                                hour: "2-digit", minute: "2-digit",
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* Countdown */}
+                                    <div className="text-right shrink-0">
+                                        <div className={`text-sm font-bold ${urgent ? "text-amber-400" : ""}`}>
+                                            {text}
+                                        </div>
+                                        {urgent && !isExpired && (
+                                            <div className="text-[8px] text-amber-400/70 font-bold uppercase tracking-wide">Yaklaşıyor!</div>
+                                        )}
+                                    </div>
+
+                                    {/* Delete */}
+                                    <button onClick={() => del(ev.id)}
+                                        className="shrink-0 p-1.5 rounded-xl text-foreground/20 hover:text-red-400 hover:bg-red-500/10 transition-colors">
+                                        <Trash2 size={14} />
+                                    </button>
+                                </motion.div>
+                            );
+                        })}
+                    </AnimatePresence>
+                </div>
+
+                {/* Tick dependency consumer (invisible) */}
+                <span className="hidden">{tick}</span>
+            </main>
+
+            <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none">
+                <div className="pointer-events-auto"><TabBar /></div>
             </div>
-
-            <AmbientSoundPlayer />
-            <TabBar />
-        </main>
+        </div>
     );
 }

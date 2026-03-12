@@ -1,118 +1,166 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Navbar } from "@/components/Navbar";
 import { TabBar } from "@/components/TabBar";
-import { AmbientSoundPlayer } from "@/components/AmbientSoundPlayer";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { BookOpen, Target, Sparkles } from "lucide-react";
 
-export default function ExamTimerPage() {
-    const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-    const [dailyQuote, setDailyQuote] = useState("");
+const EXAMS = [
+    { id: "yks", name: "YKS 2026", date: new Date("2026-06-20T10:15:00"), color: "#6366f1", emoji: "🎓" },
+    { id: "lgs", name: "LGS 2026", date: new Date("2026-06-06T09:30:00"), color: "#10b981", emoji: "📚" },
+    { id: "kpss", name: "KPSS Lisans", date: new Date("2026-07-12T10:15:00"), color: "#f59e0b", emoji: "⚖️" },
+    { id: "ales", name: "ALES", date: new Date("2026-09-06T09:30:00"), color: "#ec4899", emoji: "📝" },
+];
 
-    const quotes = [
-        "Bugün döktüğün ter, yarınki başarına dönüşecek. Asla pes etme!",
-        "Ertelediğin her gün, hayallerinden bir gün çalar. Şimdi başla.",
-        "Senin için imkansız diyenlere, başararak cevap ver.",
-        "Büyük başarılar, küçük ama sürekli adımlarla gelir.",
-        "Zorluklar, yeteneklerini uyandıran kıvılcımlardır.",
-        "Masanın başında geçirdiğin her saat, geleceğine yaptığın en büyük yatırımdır.",
-        "Vazgeçmeyi düşündüğünde, neden başladığını hatırla.",
-        "Yorgunluk geçer, geriye zaferin gururu kalır.",
-        "Hayallerinin büyüklüğü, çabanın büyüklüğüyle ölçülür.",
-        "Şansa inanma, sadece disipline ve çok çalışmaya inan.",
-    ];
+const MOTIVATIONS = [
+    "Bugün döktüğün ter, yarınki başarına dönüşecek.",
+    "Ertelediğin her gün, hayallerinden bir gün çalar. Şimdi başla.",
+    "Büyük başarılar, küçük ama sürekli adımlarla gelir.",
+    "Zorluklar, yeteneklerini uyandıran kıvılcımlardır.",
+    "Vazgeçmeyi düşündüğünde, neden başladığını hatırla.",
+    "Yorgunluk geçer, geriye zaferin gururu kalır.",
+    "Şansa inanma — disipline ve çok çalışmaya inan.",
+    "Masanda geçirdiğin her saat, geleceğine yapılan yatırımdır.",
+];
 
+function useCountdown(targetDate: Date) {
+    const [t, setT] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     useEffect(() => {
-        const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
-        setDailyQuote(quotes[dayOfYear % quotes.length]);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        const tick = () => {
+            const diff = targetDate.getTime() - Date.now();
+            if (diff <= 0) { setT({ days: 0, hours: 0, minutes: 0, seconds: 0 }); return; }
+            setT({
+                days: Math.floor(diff / 86_400_000),
+                hours: Math.floor((diff / 3_600_000) % 24),
+                minutes: Math.floor((diff / 60_000) % 60),
+                seconds: Math.floor((diff / 1_000) % 60),
+            });
+        };
+        tick();
+        const id = setInterval(tick, 1000);
+        return () => clearInterval(id);
+    }, [targetDate]);
+    return t;
+}
 
-    // Example dates
-    const exams = [
-        { name: "YKS 2026", date: new Date("2026-06-20T10:15:00") },
-        { name: "LGS 2026", date: new Date("2026-06-06T09:30:00") },
-        { name: "KPSS Lisans", date: new Date("2026-07-12T10:15:00") }
-    ];
+function pad(n: number) { return n.toString().padStart(2, "0"); }
 
-    const [selectedExam, setSelectedExam] = useState(exams[0]);
+export default function SinavSayaciPage() {
+    const [selectedId, setSelectedId] = useState("yks");
+    const exam = EXAMS.find(e => e.id === selectedId) ?? EXAMS[0];
+    const t = useCountdown(exam.date);
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            const now = new Date();
-            const difference = selectedExam.date.getTime() - now.getTime();
-
-            if (difference > 0) {
-                setTimeLeft({
-                    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                    minutes: Math.floor((difference / 1000 / 60) % 60),
-                    seconds: Math.floor((difference / 1000) % 60),
-                });
-            }
-        }, 1000);
-
-        return () => clearInterval(timer);
-    }, [selectedExam]);
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86_400_000);
+    const quote = MOTIVATIONS[dayOfYear % MOTIVATIONS.length];
 
     return (
-        <main className="min-h-screen bg-mesh-default relative flex flex-col items-center justify-center p-4 sm:p-8 overflow-hidden transition-colors duration-1000">
-            <Navbar />
+        <div className="bg-mesh-default min-h-screen flex flex-col overflow-hidden">
 
-            <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="glass-panel w-full max-w-4xl px-4 py-12 sm:p-16 text-center flex flex-col items-center justify-center gap-12 relative z-10"
-            >
-                {dailyQuote && (
-                    <div className="absolute top-0 transform -translate-y-10 sm:-translate-y-12 bg-background/80 backdrop-blur-md px-6 py-3 rounded-full border border-foreground/10 shadow-lg italic text-foreground/80 font-serif text-sm sm:text-base text-center w-[90%] md:w-auto z-20">
-                        "{dailyQuote}"
-                    </div>
-                )}
-
-                <div className="flex gap-2 p-1.5 bg-foreground/5 rounded-full overflow-hidden w-full max-w-lg mb-4 flex-wrap justify-center mt-6">
-                    {exams.map((exam) => (
-                        <button
-                            key={exam.name}
-                            onClick={() => setSelectedExam(exam)}
-                            className={`py-2 px-6 rounded-full text-sm font-medium transition-all ${selectedExam.name === exam.name
-                                ? "bg-foreground text-background shadow-md"
-                                : "text-foreground/60 hover:text-foreground"
-                                }`}
-                        >
-                            {exam.name}
+            {/* Tab selector as page header */}
+            <header className="sticky top-0 z-30 flex justify-center pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5">
+                <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md overflow-x-auto scrollbar-hide">
+                    {EXAMS.map(ex => (
+                        <button key={ex.id} onClick={() => setSelectedId(ex.id)}
+                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${selectedId === ex.id
+                                    ? "bg-foreground text-background shadow-sm"
+                                    : "text-foreground/45 hover:text-foreground"
+                                }`}>
+                            <span>{ex.emoji}</span> {ex.name}
                         </button>
                     ))}
                 </div>
+            </header>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 w-full">
-                    {[
-                        { label: "Gün", value: timeLeft.days },
-                        { label: "Saat", value: timeLeft.hours },
-                        { label: "Dakika", value: timeLeft.minutes },
-                        { label: "Saniye", value: timeLeft.seconds },
-                    ].map((item, i) => (
-                        <div key={i} className="flex flex-col items-center justify-center bg-foreground/5 rounded-3xl py-8 px-4 border border-foreground/5 shadow-inner">
-                            <span className="text-5xl sm:text-7xl font-bold tracking-tighter tabular-nums text-foreground/90">
-                                {item.value.toString().padStart(2, '0')}
-                            </span>
-                            <span className="text-foreground/50 text-sm font-medium uppercase tracking-widest mt-2">
-                                {item.label}
-                            </span>
+            <main className="flex-1 flex flex-col items-center justify-center px-4 py-6 pb-24 gap-6 relative z-10">
+
+                {/* Motivasyon alıntı */}
+                <motion.div
+                    key={quote}
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-start gap-2 max-w-xl text-center px-4"
+                >
+                    <Sparkles size={14} className="text-foreground/25 shrink-0 mt-0.5" />
+                    <p className="text-xs font-medium text-foreground/40 italic leading-relaxed">{quote}</p>
+                    <Sparkles size={14} className="text-foreground/25 shrink-0 mt-0.5" />
+                </motion.div>
+
+                {/* Sınav başlık */}
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={exam.id}
+                        initial={{ opacity: 0, scale: 0.94 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.94 }}
+                        transition={{ duration: 0.3 }}
+                        className="w-full max-w-xl flex flex-col items-center gap-5"
+                    >
+                        {/* Exam info */}
+                        <div className="flex flex-col items-center gap-1 text-center">
+                            <div className="flex items-center gap-2 text-foreground/35 text-xs font-bold uppercase tracking-widest">
+                                <Target size={12} />
+                                Hedefe Kalan Süre
+                            </div>
+                            <h1 className="text-3xl font-bold tracking-tight">{exam.name}</h1>
+                            <p className="text-xs text-foreground/35 font-medium">
+                                {exam.date.toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                            </p>
                         </div>
-                    ))}
-                </div>
 
-                <div className="text-foreground/60 font-medium">
-                    Hedef: {selectedExam.date.toLocaleDateString("tr-TR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                </div>
+                        {/* Countdown blocks */}
+                        <div className="grid grid-cols-4 gap-3 w-full">
+                            {[
+                                { label: "Gün", value: t.days },
+                                { label: "Saat", value: t.hours },
+                                { label: "Dakika", value: t.minutes },
+                                { label: "Saniye", value: t.seconds },
+                            ].map(({ label, value }, i) => (
+                                <div key={i}
+                                    className="flex flex-col items-center gap-2 glass-panel py-6 px-2 rounded-2xl border border-foreground/10 relative overflow-hidden">
+                                    {/* Accent top line */}
+                                    <div className="absolute top-0 left-0 right-0 h-0.5 opacity-60 rounded-full"
+                                        style={{ background: exam.color }} />
+                                    <span className="text-5xl sm:text-6xl font-bold tabular-nums tracking-tighter"
+                                        style={{ fontVariantNumeric: "tabular-nums" }}>
+                                        {pad(value)}
+                                    </span>
+                                    <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-foreground/40">{label}</span>
+                                </div>
+                            ))}
+                        </div>
 
-            </motion.div>
+                        {/* Progress bar */}
+                        {(() => {
+                            const totalDays = Math.max(1, Math.ceil((exam.date.getTime() - new Date("2026-01-01").getTime()) / 86_400_000));
+                            const remainDays = t.days;
+                            const pct = Math.max(0, Math.min(100, 100 - (remainDays / totalDays * 100)));
+                            return (
+                                <div className="w-full">
+                                    <div className="flex justify-between text-[10px] text-foreground/30 font-bold uppercase tracking-widest mb-1.5">
+                                        <span className="flex items-center gap-1"><BookOpen size={10} /> Geçen süre</span>
+                                        <span>{pct.toFixed(1)}%</span>
+                                    </div>
+                                    <div className="h-1.5 bg-foreground/8 rounded-full overflow-hidden">
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${pct}%` }}
+                                            transition={{ duration: 1, ease: "easeOut" }}
+                                            className="h-full rounded-full"
+                                            style={{ background: exam.color }}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })()}
 
-            <AmbientSoundPlayer />
-            <TabBar />
-        </main>
+                    </motion.div>
+                </AnimatePresence>
+            </main>
+
+            {/* TabBar */}
+            <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none">
+                <div className="pointer-events-auto"><TabBar /></div>
+            </div>
+        </div>
     );
 }

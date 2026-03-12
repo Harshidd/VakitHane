@@ -10,7 +10,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://focustime.app"),
+  metadataBase: new URL("https://vakithane.com.tr"),
   title: {
     default: "VakitHane – Online Zamanlayıcı, Sınav Sayacı & Namaz Vakitleri",
     template: "%s | VakitHane",
@@ -54,17 +54,17 @@ export const metadata: Metadata = {
     type: "website",
     locale: "tr_TR",
     siteName: "VakitHane",
-    url: "https://focustime.app",
+    url: "https://vakithane.com.tr",
   },
   twitter: {
     card: "summary_large_image",
     title: "VakitHane – Online Zamanlayıcı & Sınav Sayacı",
     description: "YKS sayım, namaz vakitleri, iftar ve meditasyon sayacı — hepsi ücretsiz.",
-    creator: "@focustimeapp",
+    creator: "@vakithane",
   },
   alternates: {
-    canonical: "https://focustime.app",
-    languages: { "tr-TR": "https://focustime.app" },
+    canonical: "https://vakithane.com.tr",
+    languages: { "tr-TR": "https://vakithane.com.tr" },
   },
   verification: {
     google: "google-site-verification-token",
@@ -80,7 +80,7 @@ export default function RootLayout({
   return (
     <html lang="tr" className="dark" suppressHydrationWarning>
       <head>
-        <link rel="canonical" href="https://focustime.app" />
+        <link rel="canonical" href="https://vakithane.com.tr" />
         <meta name="theme-color" content="#f9f7f4" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="#0d0e14" media="(prefers-color-scheme: dark)" />
         <meta name="application-name" content="VakitHane" />
@@ -96,7 +96,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebApplication",
               name: "VakitHane",
-              url: "https://focustime.app",
+              url: "https://vakithane.com.tr",
               description: "Online zamanlayıcı, sınav geri sayım, namaz vakitleri ve meditasyon sayacı.",
               applicationCategory: "ProductivityApplication",
               operatingSystem: "Web",
