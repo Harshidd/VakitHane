@@ -243,8 +243,8 @@ export default function MeditasyonPage() {
 
                 </main>
 
-                {/* Floating Ambient Sounds (Moved to bottom row on mobile) */}
-                <div className="fixed md:right-4 md:top-1/2 md:-translate-y-1/2 bottom-24 left-1/2 -translate-x-1/2 md:translate-x-0 z-40 flex md:flex-col gap-3 pointer-events-auto">
+                {/* Floating Ambient Sounds */}
+                <div className="fixed right-6 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-3 pointer-events-auto items-center">
                     {SOUNDS.map(snd => {
                         const Icon = snd.icon;
                         const isActive = activeSound === snd.id;
@@ -252,7 +252,7 @@ export default function MeditasyonPage() {
                             <button
                                 key={snd.id}
                                 onClick={() => toggleSound(snd.id)}
-                                className={`p-3 rounded-full transition-all flex items-center justify-center border shadow-lg ${isActive
+                                className={`w-12 h-12 rounded-full transition-all flex items-center justify-center border shadow-xl ${isActive
                                     ? "bg-foreground text-background border-transparent scale-110"
                                     : "glass border-foreground/15 text-foreground/50 hover:bg-foreground/10 hover:text-foreground"
                                     }`}
