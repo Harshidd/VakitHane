@@ -125,34 +125,39 @@ export default function Home() {
 
         {/* ── HEADER ── */}
         {!isRunning && (
-          <header className="w-full flex items-center justify-center px-5 py-3 z-50 relative shrink-0 border-b border-foreground/5 bg-background/20 backdrop-blur-sm min-h-[64px] md:min-h-[74px]">
-            <div className="absolute left-5 flex items-center gap-3 shrink-0">
+          <header className="w-full flex items-center justify-center px-4 py-3 z-50 relative shrink-0 border-b border-foreground/5 bg-background/20 backdrop-blur-sm min-h-[64px] md:min-h-[74px]">
+            {/* Logo Left */}
+            <div className="absolute left-3 sm:left-5 flex items-center gap-3 shrink-0">
               <div className="group flex items-center gap-2 cursor-pointer">
                 <div className="bg-foreground text-background p-2 rounded-xl group-hover:rotate-12 transition-transform shadow-md">
                   <Timer size={14} />
                 </div>
-                <span className="font-bold text-[15px] tracking-tight hidden sm:block">VakitHane</span>
+                <span className="font-bold text-[15px] tracking-tight hidden md:block">VakitHane</span>
               </div>
             </div>
 
-            <div className="flex items-center">
+            {/* Central Tabs */}
+            <div className="flex items-center mx-auto max-w-[70%] sm:max-w-none">
               <TabBar inline />
             </div>
 
-            <div className="absolute right-5 flex gap-1 items-center shrink-0">
+            {/* Actions Right */}
+            <div className="absolute right-3 sm:right-5 flex gap-0.5 sm:gap-1 items-center shrink-0">
               <button
                 onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
-                className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5"
+                className="p-1.5 sm:p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1"
               >
-                <Languages size={14} />
-                <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
+                <Languages size={13} />
+                <span className="text-[9px] font-bold uppercase tracking-wider">{language}</span>
               </button>
-              <div className="hidden xs:flex gap-1 items-center">
+              
+              <div className="hidden sm:flex gap-1 items-center">
                 <button className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100">
                   <Settings size={14} />
                 </button>
               </div>
-              <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100">
+
+              <button onClick={toggleTheme} className="p-1.5 sm:p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100">
                 {isDark ? <Sun size={14} /> : <Moon size={14} />}
               </button>
             </div>

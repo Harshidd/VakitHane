@@ -359,7 +359,7 @@ export default function PrayerTimesPage() {
                         <HomeButton />
                     </div>
 
-                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
+                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md max-w-[75%] sm:max-w-none">
                         <button onClick={() => setTab("namaz")}
                             className={`px-3 sm:px-6 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all ${tab === "namaz" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
                             {t("prayer_times")}

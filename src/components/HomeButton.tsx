@@ -14,7 +14,7 @@ export function HomeButton() {
             >
                 <Timer size={16} strokeWidth={2.5} />
             </motion.div>
-            <span className="font-bold text-[14px] tracking-tight opacity-60 group-hover:opacity-100 transition-opacity hidden xs:block">VakitHane</span>
+            <span className="font-bold text-[14px] tracking-tight opacity-60 group-hover:opacity-100 transition-opacity hidden md:block">VakitHane</span>
         </Link>
     );
 }

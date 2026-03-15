@@ -81,7 +81,8 @@ export default function OzelGunlerPage() {
                     </div>
 
                     <div className="flex items-center gap-2 text-foreground/60 text-[14px] font-semibold tracking-tight">
-                        <Calendar size={15} /> {t("my_special_days")}
+                        <Calendar size={15} /> 
+                        <span className="hidden xs:block">{t("my_special_days")}</span>
                     </div>
                     
                     <div className="absolute right-4 flex items-center gap-2">

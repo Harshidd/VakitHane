@@ -78,10 +78,10 @@ export default function SinavSayaciPage() {
                         <HomeButton />
                     </div>
 
-                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md overflow-x-auto scrollbar-hide mx-auto max-w-[65%] xs:max-w-none">
+                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md overflow-x-auto scrollbar-hide mx-auto max-w-[75%] sm:max-w-none">
                         {EXAMS.map(ex => (
                             <button key={ex.id} onClick={() => setSelectedId(ex.id)}
-                                className={`px-3 py-1.5 rounded-xl text-[10px] sm:text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${selectedId === ex.id
+                                className={`px-2.5 py-1.5 rounded-xl text-[10px] sm:text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1 sm:gap-1.5 ${selectedId === ex.id
                                     ? "bg-foreground text-background shadow-sm"
                                     : "text-foreground/45 hover:text-foreground"
                                     }`}>

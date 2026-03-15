@@ -29,7 +29,7 @@ export function TabBar({ inline = false }: { inline?: boolean }) {
                     <Link
                         key={tab.href}
                         href={tab.href}
-                        className={`group relative flex flex-col items-center justify-center px-3 py-2 rounded-xl transition-all duration-200 min-w-[60px] sm:min-w-[72px] ${isActive ? "text-background" : "text-foreground/55 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5"}`}
+                        className={`group relative flex flex-col items-center justify-center px-1.5 xs:px-3 py-1.5 xs:py-2 rounded-xl transition-all duration-200 min-w-[40px] xs:min-w-[50px] sm:min-w-[72px] ${isActive ? "text-background" : "text-foreground/55 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5"}`}
                     >
                         {isActive && (
                             <motion.span
@@ -38,10 +38,10 @@ export function TabBar({ inline = false }: { inline?: boolean }) {
                                 transition={{ type: "spring", stiffness: 380, damping: 32 }}
                             />
                         )}
-                        <span className="relative z-10 flex flex-col items-center gap-1">
-                            <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
-                            <span className={`text-[10px] font-semibold tracking-tight leading-none transition-all ${isActive ? "opacity-100" : "opacity-60 hidden sm:block group-hover:opacity-100"}`}>
-                                {tab.label}
+                        <span className="relative z-10 flex flex-col items-center gap-0.5 xs:gap-1">
+                            <Icon size={16} className="xs:w-[18px] xs:h-[18px]" strokeWidth={isActive ? 2.5 : 2} />
+                            <span className={`text-[9px] xs:text-[10px] font-semibold tracking-tight leading-none transition-all ${isActive ? "opacity-100 block" : "opacity-60 hidden sm:block group-hover:opacity-100"}`}>
+                                {tab.label.split(' ')[0]}
                             </span>
                         </span>
                     </Link>

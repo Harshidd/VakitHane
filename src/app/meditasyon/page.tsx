@@ -172,7 +172,7 @@ export default function MeditasyonPage() {
                         <HomeButton />
                     </div>
 
-                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md overflow-x-auto scrollbar-hide mx-auto max-w-[65%] xs:max-w-none">
+                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md overflow-x-auto scrollbar-hide mx-auto max-w-[75%] sm:max-w-none">
                         {PROGRAMS.map(p => (
                             <button key={p.id} onClick={() => setProgramId(p.id)}
                                 className={`px-2.5 py-1.5 rounded-xl text-[10px] sm:text-[11px] font-bold transition-all whitespace-nowrap ${programId === p.id
