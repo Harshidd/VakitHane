@@ -5,6 +5,7 @@ import { TabBar } from "@/components/TabBar";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Moon, RefreshCw, MapPin, Languages } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { HomeButton } from "@/components/HomeButton";
 
 /* ─── Types ─────────────────────────────────────────── */
 interface PrayerTimings {
@@ -156,7 +157,7 @@ function PrayerTab() {
         <div className="flex flex-col gap-4">
 
             {/* Controls */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
                 <div className="flex items-center gap-1.5 glass border border-foreground/12 rounded-xl px-3 py-2.5 shrink-0">
                     <MapPin size={12} className="text-foreground/40" />
                     <select value={city} onChange={e => setCity(e.target.value)}
@@ -165,15 +166,15 @@ function PrayerTab() {
                     </select>
                 </div>
 
-                <div className="flex-1 flex items-center justify-between glass border border-foreground/12 rounded-xl px-3 py-2">
+                <div className="flex-1 min-w-[200px] flex items-center justify-between glass border border-foreground/12 rounded-xl px-3 py-2">
                     <button onClick={() => setDayOffset(d => d - 1)}
                         className="p-1 rounded-lg hover:bg-foreground/10 transition-colors">
                         <ChevronLeft size={16} />
                     </button>
-                    <div className="text-center leading-snug">
-                        <div className="text-sm font-bold mb-0.5">{dayLabel}</div>
-                        {data && <div className="text-[10px] text-foreground/50 font-medium whitespace-nowrap">
-                            {displayDate.toLocaleDateString(language === "tr" ? "tr-TR" : "en-US", { day: "numeric", month: "long", year: "numeric" })} <span className="opacity-40 px-0.5">·</span> {data.hijri}
+                    <div className="text-center leading-snug px-2">
+                        <div className="text-sm font-bold mb-0.5 whitespace-nowrap">{dayLabel}</div>
+                        {data && <div className="text-[9px] sm:text-[10px] text-foreground/50 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
+                            {data.hijri}
                         </div>}
                     </div>
                     <button onClick={() => setDayOffset(d => d + 1)}
@@ -183,7 +184,7 @@ function PrayerTab() {
                 </div>
 
                 <button onClick={load} disabled={loading}
-                    className="p-2.5 rounded-xl glass border border-foreground/12 hover:bg-foreground/10 transition-colors">
+                    className="p-2.5 rounded-xl glass border border-foreground/12 hover:bg-foreground/10 transition-colors shrink-0">
                     <RefreshCw size={14} className={loading ? "animate-spin opacity-40" : "opacity-50"} />
                 </button>
             </div>
@@ -354,15 +355,18 @@ export default function PrayerTimesPage() {
             <div className="flex flex-col min-h-screen shrink-0 relative z-10 w-full">
 
                 <header className="sticky top-0 z-30 flex flex-col md:flex-row items-center justify-between px-4 py-3 backdrop-blur-md bg-background/70 border-b border-foreground/5 gap-3">
-                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
-                        <button onClick={() => setTab("namaz")}
-                            className={`px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${tab === "namaz" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
-                            {t("prayer_times")}
-                        </button>
-                        <button onClick={() => setTab("dinigunler")}
-                            className={`px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${tab === "dinigunler" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
-                            {t("religious_days")}
-                        </button>
+                    <div className="w-full md:w-auto flex items-center justify-between md:justify-start gap-4">
+                        <HomeButton />
+                        <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
+                            <button onClick={() => setTab("namaz")}
+                                className={`px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${tab === "namaz" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
+                                {t("prayer_times")}
+                            </button>
+                            <button onClick={() => setTab("dinigunler")}
+                                className={`px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${tab === "dinigunler" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
+                                {t("religious_days")}
+                            </button>
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-2">

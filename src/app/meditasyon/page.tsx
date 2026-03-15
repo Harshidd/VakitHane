@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BreathingCircle } from "@/components/BreathingCircle";
 import { RotateCcw, CloudRain, Flame, Wind, Rocket, Sparkles, Volume2, Languages } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { HomeButton } from "@/components/HomeButton";
 
 const ZEN_QUOTES: Record<string, string[]> = {
     tr: [
@@ -167,16 +168,19 @@ export default function MeditasyonPage() {
             <div className="flex flex-col min-h-screen shrink-0 relative z-10 w-full">
                 {/* Program selector header */}
                 <header className="flex-none flex flex-col md:flex-row items-center justify-between px-4 pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5 z-30 gap-3">
-                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
-                        {PROGRAMS.map(p => (
-                            <button key={p.id} onClick={() => setProgramId(p.id)}
-                                className={`px-3 py-1.5 rounded-xl text-[10px] sm:text-[11px] font-bold transition-all whitespace-nowrap ${programId === p.id
-                                    ? "bg-foreground text-background shadow-sm"
-                                    : "text-foreground/45 hover:text-foreground"
-                                    }`}>
-                                <span>{p.label}</span>
-                            </button>
-                        ))}
+                    <div className="w-full md:w-auto flex items-center justify-between md:justify-start gap-4">
+                        <HomeButton />
+                        <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
+                            {PROGRAMS.map(p => (
+                                <button key={p.id} onClick={() => setProgramId(p.id)}
+                                    className={`px-3 py-1.5 rounded-xl text-[10px] sm:text-[11px] font-bold transition-all whitespace-nowrap ${programId === p.id
+                                        ? "bg-foreground text-background shadow-sm"
+                                        : "text-foreground/45 hover:text-foreground"
+                                        }`}>
+                                    <span>{p.label}</span>
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
                     <button

@@ -125,18 +125,19 @@ export default function Home() {
 
         {/* ── HEADER ── */}
         {!isRunning && (
-          <header className="w-full flex items-center justify-between px-5 py-2.5 z-50 relative shrink-0">
+          <header className="w-full flex items-center justify-between px-5 py-3 z-50 relative shrink-0 border-b border-foreground/5 bg-background/20 backdrop-blur-sm">
             <div className="flex items-center gap-3 shrink-0">
               <div className="group flex items-center gap-2 cursor-pointer">
                 <div className="bg-foreground text-background p-2 rounded-xl group-hover:rotate-12 transition-transform shadow-md">
                   <Timer size={14} />
                 </div>
-                <span className="font-bold text-[15px] tracking-tight hidden sm:block">VakitHane</span>
+                <span className="font-bold text-[15px] tracking-tight hidden xs:block">VakitHane</span>
               </div>
             </div>
 
-
-            <TabBar inline />
+            <div className="hidden md:block">
+              <TabBar inline />
+            </div>
 
             <div className="flex gap-1 items-center shrink-0">
               <button
@@ -157,7 +158,7 @@ export default function Home() {
         )}
 
         {/* ── BODY ── */}
-        <main className="flex-1 flex items-center justify-center relative z-10 px-3 sm:px-6 min-h-0 overflow-hidden">
+        <main className="flex-1 flex flex-col items-center relative z-10 px-3 sm:px-6 min-h-0 overflow-y-auto scrollbar-hide py-10 pt-4 md:py-0 md:justify-center">
           <AnimatePresence mode="wait">
 
             {/* ── SETUP VIEW ── */}
@@ -165,9 +166,9 @@ export default function Home() {
               <motion.div
                 key="setup"
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="w-full max-w-7xl flex items-center justify-center gap-4 lg:gap-5"
+                className="w-full max-w-7xl flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-5"
               >
-                {/* LEFT CARDS */}
+                {/* LEFT CARDS (DESKTOP) */}
                 <div className="hidden lg:flex flex-col gap-3 w-52 xl:w-60 shrink-0">
                   {CATEGORIES.filter(c => c.side === "left").map(cat => (
                     <CatCard key={cat.id} cat={cat} />
@@ -176,16 +177,16 @@ export default function Home() {
 
                 {/* ── CENTER ── */}
                 <div className="flex flex-col items-center shrink-0 w-full lg:w-auto">
-                  <div className="relative flex items-center justify-center" style={{ width: clockSize, height: clockSize }}>
+                  <div className="relative flex items-center justify-center mb-4 md:mb-0" style={{ width: clockSize, height: clockSize }}>
                     <ProgressArc progress={isPaused ? progress : 1} size={clockSize} />
                     <VintageWallClock className="w-full h-full" />
                   </div>
 
                   {/* ── Control band — preset groups + inputs + start ── */}
-                  <div className="mt-7 flex flex-col md:flex-row items-stretch md:items-center gap-0 glass border border-foreground/12 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg w-[90%] sm:w-auto">
+                  <div className="mt-7 flex flex-col md:flex-row items-stretch md:items-center gap-0 glass border border-foreground/12 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg w-full max-w-[400px] md:max-w-none md:w-auto">
 
                     {/* LGS group */}
-                    <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
+                    <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-b md:border-b-0 md:border-r border-foreground/10">
                       <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">LGS</span>
                       <div className="flex gap-1.5">
                         {PRESET_GROUPS[0].items.map(p => {
@@ -261,11 +262,16 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* RIGHT CARDS */}
+                {/* RIGHT CARDS (DESKTOP) */}
                 <div className="hidden lg:flex flex-col gap-3 w-52 xl:w-60 shrink-0">
                   {CATEGORIES.filter(c => c.side === "right").map(cat => (
                     <CatCard key={cat.id} cat={cat} />
                   ))}
+                </div>
+
+                {/* MOBILE CARDS (Only on mobile/tablet) */}
+                <div className="grid grid-cols-2 gap-3 w-full max-w-[400px] lg:hidden mt-4 pb-10">
+                  {CATEGORIES.slice(0, 4).map(cat => <CatCard key={cat.id} cat={cat} compact />)}
                 </div>
               </motion.div>
             )}
@@ -316,13 +322,6 @@ export default function Home() {
             )}
 
           </AnimatePresence>
-
-          {/* MOBILE CARDS */}
-          {!isRunning && (
-            <div className="absolute bottom-10 left-0 right-0 grid grid-cols-2 gap-2 px-4 lg:hidden">
-              {CATEGORIES.slice(0, 4).map(cat => <CatCard key={cat.id} cat={cat} compact />)}
-            </div>
-          )}
         </main>
 
         {/* Pause banner */}
@@ -373,6 +372,12 @@ export default function Home() {
             </div>
           </article>
         </section>
+      )}
+
+      {!isRunning && (
+        <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none md:hidden">
+          <div className="pointer-events-auto"><TabBar /></div>
+        </div>
       )}
 
     </div>

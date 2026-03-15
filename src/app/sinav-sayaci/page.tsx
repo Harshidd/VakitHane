@@ -5,6 +5,7 @@ import { TabBar } from "@/components/TabBar";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, Target, Sparkles, Languages } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { HomeButton } from "@/components/HomeButton";
 
 const EXAMS = [
     { id: "yks", name: "YKS 2026", date: new Date("2026-06-20T10:15:00"), color: "#6366f1", emoji: "🎓" },
@@ -72,17 +73,20 @@ export default function SinavSayaciPage() {
         <div className="bg-mesh-default min-h-screen overflow-y-auto overflow-x-hidden scrollbar-hide">
             <div className="flex flex-col min-h-screen shrink-0 w-full relative z-10">
                 {/* Tab selector as page header */}
-                <header className="sticky top-0 z-30 flex flex-col items-center justify-center pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5 gap-3">
-                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md overflow-x-auto scrollbar-hide max-w-full">
-                        {EXAMS.map(ex => (
-                            <button key={ex.id} onClick={() => setSelectedId(ex.id)}
-                                className={`px-4 py-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${selectedId === ex.id
-                                    ? "bg-foreground text-background shadow-sm"
-                                    : "text-foreground/45 hover:text-foreground"
-                                    }`}>
-                                <span>{ex.emoji}</span> {ex.name}
-                            </button>
-                        ))}
+                <header className="sticky top-0 z-30 flex flex-col md:flex-row items-center justify-between px-4 pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5 gap-3">
+                    <div className="w-full md:w-auto flex items-center justify-between md:justify-start gap-4">
+                        <HomeButton />
+                        <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md overflow-x-auto scrollbar-hide max-w-[240px] xs:max-w-none">
+                            {EXAMS.map(ex => (
+                                <button key={ex.id} onClick={() => setSelectedId(ex.id)}
+                                    className={`px-3 py-1.5 rounded-xl text-[10px] sm:text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${selectedId === ex.id
+                                        ? "bg-foreground text-background shadow-sm"
+                                        : "text-foreground/45 hover:text-foreground"
+                                        }`}>
+                                    <span>{ex.emoji}</span> {ex.name}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                     
                     <button

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Timer, ArrowLeft, Languages } from "lucide-react";
 import { TabBar } from "@/components/TabBar";
 import { useLanguage } from "@/context/LanguageContext";
+import { HomeButton } from "@/components/HomeButton";
 
 const Globe3D = dynamic(() => import("@/components/Globe3D").then(m => m.Globe3D), { ssr: false });
 
@@ -66,10 +67,7 @@ export default function DunyaSaatleriPage() {
 
                 {/* Header */}
                 <header className="flex flex-col md:flex-row items-center justify-between px-5 py-3 border-b border-white/5 shrink-0 gap-3">
-                    <Link href="/" className="flex items-center gap-2 text-white/40 hover:text-white/80 transition-colors text-xs font-semibold">
-                        <ArrowLeft size={14} />
-                        VakitHane
-                    </Link>
+                    <HomeButton />
                     
                     <div className="flex items-center gap-4">
                         <button

@@ -6,6 +6,7 @@ import { Play, Pause, RotateCcw, Flag, Timer, Languages } from "lucide-react";
 import Link from "next/link";
 import { TabBar } from "@/components/TabBar";
 import { useLanguage } from "@/context/LanguageContext";
+import { HomeButton } from "@/components/HomeButton";
 
 interface Lap { n: number; time: number; delta: number; }
 
@@ -57,9 +58,7 @@ export default function KronometrePage() {
             <div className="flex flex-col min-h-screen shrink-0 w-full relative z-10 items-center justify-start px-4 py-8">
                 {/* Back */}
                 <header className="w-full max-w-lg flex items-center justify-between mb-10">
-                    <Link href="/" className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity text-sm font-semibold">
-                        <Timer size={18} /> VakitHane
-                    </Link>
+                    <HomeButton />
                     
                     <div className="flex items-center gap-4">
                         <button

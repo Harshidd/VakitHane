@@ -5,6 +5,7 @@ import { TabBar } from "@/components/TabBar";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, Plus, Calendar, Clock, Sparkles, Languages } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { HomeButton } from "@/components/HomeButton";
 
 interface Event { id: string; name: string; date: string; emoji: string; }
 
@@ -75,8 +76,11 @@ export default function OzelGunlerPage() {
             <div className="flex flex-col min-h-screen shrink-0 w-full relative z-10">
                 {/* Header */}
                 <header className="sticky top-0 z-30 flex flex-col md:flex-row items-center justify-between px-5 pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5 gap-3">
-                    <div className="flex items-center gap-2 text-foreground/60 text-[14px] font-semibold tracking-tight">
-                        <Calendar size={15} /> {t("my_special_days")}
+                    <div className="w-full md:w-auto flex items-center justify-between md:justify-start gap-4">
+                        <HomeButton />
+                        <div className="flex items-center gap-2 text-foreground/60 text-[14px] font-semibold tracking-tight">
+                            <Calendar size={15} /> {t("my_special_days")}
+                        </div>
                     </div>
                     
                     <div className="flex items-center gap-2">
