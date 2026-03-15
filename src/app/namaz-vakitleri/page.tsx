@@ -354,22 +354,23 @@ export default function PrayerTimesPage() {
         <div className="bg-mesh-default min-h-screen overflow-y-auto overflow-x-hidden scrollbar-hide">
             <div className="flex flex-col min-h-screen shrink-0 relative z-10 w-full">
 
-                <header className="sticky top-0 z-30 flex flex-col md:flex-row items-center justify-between px-4 py-3 backdrop-blur-md bg-background/70 border-b border-foreground/5 gap-3">
-                    <div className="w-full md:w-auto flex items-center justify-between md:justify-start gap-4">
+                <header className="sticky top-0 z-30 w-full px-4 py-3 backdrop-blur-md bg-background/70 border-b border-foreground/5 flex items-center justify-center min-h-[60px] md:min-h-[70px]">
+                    <div className="absolute left-4">
                         <HomeButton />
-                        <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
-                            <button onClick={() => setTab("namaz")}
-                                className={`px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${tab === "namaz" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
-                                {t("prayer_times")}
-                            </button>
-                            <button onClick={() => setTab("dinigunler")}
-                                className={`px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${tab === "dinigunler" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
-                                {t("religious_days")}
-                            </button>
-                        </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
+                        <button onClick={() => setTab("namaz")}
+                            className={`px-3 sm:px-6 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all ${tab === "namaz" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
+                            {t("prayer_times")}
+                        </button>
+                        <button onClick={() => setTab("dinigunler")}
+                            className={`px-3 sm:px-6 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs md:text-sm font-bold transition-all ${tab === "dinigunler" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
+                            {t("religious_days")}
+                        </button>
+                    </div>
+
+                    <div className="absolute right-4 hidden md:block">
                          <button
                             onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
                             className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5"

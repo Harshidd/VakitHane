@@ -167,29 +167,32 @@ export default function MeditasyonPage() {
         <div className="bg-mesh-default min-h-screen overflow-y-auto overflow-x-hidden scrollbar-hide">
             <div className="flex flex-col min-h-screen shrink-0 relative z-10 w-full">
                 {/* Program selector header */}
-                <header className="flex-none flex flex-col md:flex-row items-center justify-between px-4 pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5 z-30 gap-3">
-                    <div className="w-full md:w-auto flex items-center justify-between md:justify-start gap-4">
+                <header className="flex-none w-full px-4 py-3 backdrop-blur-md bg-background/70 border-b border-foreground/5 z-30 flex items-center justify-center min-h-[60px] md:min-h-[70px]">
+                    <div className="absolute left-4">
                         <HomeButton />
-                        <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
-                            {PROGRAMS.map(p => (
-                                <button key={p.id} onClick={() => setProgramId(p.id)}
-                                    className={`px-3 py-1.5 rounded-xl text-[10px] sm:text-[11px] font-bold transition-all whitespace-nowrap ${programId === p.id
-                                        ? "bg-foreground text-background shadow-sm"
-                                        : "text-foreground/45 hover:text-foreground"
-                                        }`}>
-                                    <span>{p.label}</span>
-                                </button>
-                            ))}
-                        </div>
                     </div>
 
-                    <button
-                        onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
-                        className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-foreground/10"
-                    >
-                        <Languages size={14} />
-                        <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
-                    </button>
+                    <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md overflow-x-auto scrollbar-hide mx-auto max-w-[65%] xs:max-w-none">
+                        {PROGRAMS.map(p => (
+                            <button key={p.id} onClick={() => setProgramId(p.id)}
+                                className={`px-2.5 py-1.5 rounded-xl text-[10px] sm:text-[11px] font-bold transition-all whitespace-nowrap ${programId === p.id
+                                    ? "bg-foreground text-background shadow-sm"
+                                    : "text-foreground/45 hover:text-foreground"
+                                    }`}>
+                                <span>{p.label}</span>
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="absolute right-4 hidden md:block">
+                        <button
+                            onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
+                            className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-foreground/10"
+                        >
+                            <Languages size={14} />
+                            <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
+                        </button>
+                    </div>
                 </header>
 
                 <main className="flex-1 flex flex-col items-center justify-start px-4 pt-4 pb-24 gap-4 relative z-10 w-full max-w-xl mx-auto min-h-0">

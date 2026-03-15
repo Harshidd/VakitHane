@@ -57,10 +57,14 @@ export default function KronometrePage() {
         <div className="bg-mesh-default min-h-screen overflow-y-auto overflow-x-hidden scrollbar-hide">
             <div className="flex flex-col min-h-screen shrink-0 w-full relative z-10 items-center justify-start px-4 py-8">
                 {/* Back */}
-                <header className="w-full max-w-lg flex items-center justify-between mb-10">
-                    <HomeButton />
+                <header className="w-full max-w-lg flex items-center justify-center mb-10 relative min-h-[50px]">
+                    <div className="absolute left-0">
+                        <HomeButton />
+                    </div>
                     
-                    <div className="flex items-center gap-4">
+                    <span className="text-[13px] text-foreground/45 tracking-wide font-semibold">{t("tab_stopwatch")}</span>
+
+                    <div className="absolute right-0 hidden md:block">
                         <button
                             onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
                             className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-foreground/10"
@@ -68,7 +72,6 @@ export default function KronometrePage() {
                             <Languages size={14} />
                             <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
                         </button>
-                        <span className="text-[13px] text-foreground/45 tracking-wide font-semibold">{t("tab_stopwatch")}</span>
                     </div>
                 </header>
 

@@ -75,22 +75,25 @@ export default function OzelGunlerPage() {
         <div className="bg-mesh-default min-h-screen overflow-y-auto overflow-x-hidden scrollbar-hide">
             <div className="flex flex-col min-h-screen shrink-0 w-full relative z-10">
                 {/* Header */}
-                <header className="sticky top-0 z-30 flex flex-col md:flex-row items-center justify-between px-5 pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5 gap-3">
-                    <div className="w-full md:w-auto flex items-center justify-between md:justify-start gap-4">
+                <header className="sticky top-0 z-30 w-full px-5 py-3 backdrop-blur-md bg-background/70 border-b border-foreground/5 z-30 flex items-center justify-center min-h-[60px] md:min-h-[70px]">
+                    <div className="absolute left-4">
                         <HomeButton />
-                        <div className="flex items-center gap-2 text-foreground/60 text-[14px] font-semibold tracking-tight">
-                            <Calendar size={15} /> {t("my_special_days")}
-                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-foreground/60 text-[14px] font-semibold tracking-tight">
+                        <Calendar size={15} /> {t("my_special_days")}
                     </div>
                     
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
-                            className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-foreground/10"
-                        >
-                            <Languages size={14} />
-                            <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
-                        </button>
+                    <div className="absolute right-4 flex items-center gap-2">
+                        <div className="hidden md:block">
+                            <button
+                                onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
+                                className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-foreground/10"
+                            >
+                                <Languages size={14} />
+                                <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
+                            </button>
+                        </div>
 
                         <button onClick={() => setShowForm(s => !s)}
                             className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all ${showForm

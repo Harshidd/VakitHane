@@ -125,31 +125,33 @@ export default function Home() {
 
         {/* ── HEADER ── */}
         {!isRunning && (
-          <header className="w-full flex items-center justify-between px-5 py-3 z-50 relative shrink-0 border-b border-foreground/5 bg-background/20 backdrop-blur-sm">
-            <div className="flex items-center gap-3 shrink-0">
+          <header className="w-full flex items-center justify-center px-5 py-3 z-50 relative shrink-0 border-b border-foreground/5 bg-background/20 backdrop-blur-sm min-h-[64px] md:min-h-[74px]">
+            <div className="absolute left-5 flex items-center gap-3 shrink-0">
               <div className="group flex items-center gap-2 cursor-pointer">
                 <div className="bg-foreground text-background p-2 rounded-xl group-hover:rotate-12 transition-transform shadow-md">
                   <Timer size={14} />
                 </div>
-                <span className="font-bold text-[15px] tracking-tight hidden xs:block">VakitHane</span>
+                <span className="font-bold text-[15px] tracking-tight hidden sm:block">VakitHane</span>
               </div>
             </div>
 
-            <div className="hidden md:block">
+            <div className="flex items-center">
               <TabBar inline />
             </div>
 
-            <div className="flex gap-1 items-center shrink-0">
-              <button
-                onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
-                className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5"
-              >
-                <Languages size={14} />
-                <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
-              </button>
-              <button className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100">
-                <Settings size={14} />
-              </button>
+            <div className="absolute right-5 flex gap-1 items-center shrink-0">
+              <div className="hidden xs:flex gap-1 items-center">
+                <button
+                  onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
+                  className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5"
+                >
+                  <Languages size={14} />
+                  <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
+                </button>
+                <button className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100">
+                  <Settings size={14} />
+                </button>
+              </div>
               <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100">
                 {isDark ? <Sun size={14} /> : <Moon size={14} />}
               </button>
@@ -270,8 +272,8 @@ export default function Home() {
                 </div>
 
                 {/* MOBILE CARDS (Only on mobile/tablet) */}
-                <div className="grid grid-cols-2 gap-3 w-full max-w-[400px] lg:hidden mt-4 pb-10">
-                  {CATEGORIES.slice(0, 4).map(cat => <CatCard key={cat.id} cat={cat} compact />)}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-md lg:hidden mt-4 pb-20 px-2">
+                  {CATEGORIES.map(cat => <CatCard key={cat.id} cat={cat} />)}
                 </div>
               </motion.div>
             )}
@@ -374,28 +376,22 @@ export default function Home() {
         </section>
       )}
 
-      {!isRunning && (
-        <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none md:hidden">
-          <div className="pointer-events-auto"><TabBar /></div>
-        </div>
-      )}
-
     </div>
   );
 }
 
-function CatCard({ cat, compact }: { cat: CatItem; compact?: boolean }) {
+function CatCard({ cat }: { cat: CatItem; compact?: boolean }) {
   const Icon = cat.icon;
   return (
     <Link
       href={cat.href}
-      className={`group flex flex-col ${compact ? "items-center text-center p-3" : "items-start p-4.5"} rounded-3xl glass border border-foreground/10 shadow-sm hover:scale-[1.02] hover:shadow-lg transition-all w-full`}
+      className="group flex flex-col items-start p-4 md:p-5 rounded-3xl glass border border-foreground/10 shadow-sm hover:scale-[1.02] hover:shadow-lg transition-all w-full"
     >
-      <div className={`${compact ? "p-2.5 mb-2" : "p-3 mb-3.5"} rounded-2xl glass group-hover:bg-foreground group-hover:text-background transition-colors`}>
-        <Icon size={compact ? 18 : 22} strokeWidth={1.5} />
+      <div className="p-2.5 md:p-3 mb-3 md:mb-4 rounded-2xl glass group-hover:bg-foreground group-hover:text-background transition-colors">
+        <Icon size={20} strokeWidth={1.5} />
       </div>
-      <span className={`${compact ? "text-[13px]" : "text-[16px]"} font-semibold tracking-tight group-hover:text-foreground/80 transition-colors leading-snug`}>{cat.name}</span>
-      {!compact && <span className="text-[12px] text-foreground/45 font-medium tracking-wide mt-1 leading-snug">{cat.desc}</span>}
+      <span className="text-[14px] md:text-[16px] font-semibold tracking-tight group-hover:text-foreground/80 transition-colors leading-snug">{cat.name}</span>
+      <span className="text-[11px] md:text-[12px] text-foreground/45 font-medium tracking-wide mt-1 leading-snug">{cat.desc}</span>
     </Link>
   );
 }

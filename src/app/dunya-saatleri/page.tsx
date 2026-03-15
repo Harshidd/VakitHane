@@ -66,10 +66,14 @@ export default function DunyaSaatleriPage() {
             <div className="flex flex-col min-h-screen shrink-0 relative z-10 w-full">
 
                 {/* Header */}
-                <header className="flex flex-col md:flex-row items-center justify-between px-5 py-3 border-b border-white/5 shrink-0 gap-3">
-                    <HomeButton />
-                    
-                    <div className="flex items-center gap-4">
+                <header className="w-full px-5 py-3 border-b border-white/5 shrink-0 flex items-center justify-center relative min-h-[60px] md:min-h-[70px]">
+                    <div className="absolute left-4">
+                        <HomeButton />
+                    </div>
+
+                    <span className="text-[13px] text-white/40 tracking-wide font-semibold">{t("tab_world_clocks")}</span>
+
+                    <div className="absolute right-4 hidden md:block">
                         <button
                             onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
                             className="p-2 rounded-full hover:bg-white/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-white/10"
@@ -77,7 +81,6 @@ export default function DunyaSaatleriPage() {
                             <Languages size={14} />
                             <span className="text-[10px] font-bold uppercase tracking-wider text-white">{language}</span>
                         </button>
-                        <span className="text-[13px] text-white/40 tracking-wide font-semibold">{t("tab_world_clocks")}</span>
                     </div>
                 </header>
 
