@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, Plus, Calendar, Clock, Sparkles, Languages } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { HomeButton } from "@/components/HomeButton";
+import { BottomBanner } from "@/components/BottomBanner";
 
 interface Event { id: string; name: string; date: string; emoji: string; }
 
@@ -230,6 +231,8 @@ export default function OzelGunlerPage() {
                     </div>
                 </article>
             </section>
+
+            <BottomBanner />
 
             <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none">
                 <div className="pointer-events-auto"><TabBar /></div>

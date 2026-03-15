@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, Target, Sparkles, Languages } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { HomeButton } from "@/components/HomeButton";
+import { BottomBanner } from "@/components/BottomBanner";
 
 const EXAMS = [
     { id: "yks", name: "YKS 2026", date: new Date("2026-06-20T10:15:00"), color: "#6366f1", emoji: "🎓" },
@@ -205,6 +206,8 @@ export default function SinavSayaciPage() {
                     </div>
                 </article>
             </section>
+
+            <BottomBanner />
 
             {/* TabBar */}
             <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none">

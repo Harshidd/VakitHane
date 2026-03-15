@@ -7,6 +7,7 @@ import { Timer, ArrowLeft, Languages } from "lucide-react";
 import { TabBar } from "@/components/TabBar";
 import { useLanguage } from "@/context/LanguageContext";
 import { HomeButton } from "@/components/HomeButton";
+import { BottomBanner } from "@/components/BottomBanner";
 
 const Globe3D = dynamic(() => import("@/components/Globe3D").then(m => m.Globe3D), { ssr: false });
 
@@ -109,15 +110,7 @@ export default function DunyaSaatleriPage() {
                                 <CityRow key={city.name} city={city} language={language} />
                             ))}
                         </div>
-
-                        {/* Footer branding */}
-                        <div className="px-4 py-3 border-t border-white/5 shrink-0">
-                            <span className="text-[11px] text-white/30 font-medium tracking-wide">
-                                design by <strong className="text-white/40">MRK</strong>
-                            </span>
-                        </div>
                     </div>
-
                 </div>
 
                 {/* ── SEO SECTION ── */}
@@ -137,6 +130,8 @@ export default function DunyaSaatleriPage() {
                         </div>
                     </article>
                 </section>
+
+            <BottomBanner dark />
             </div>
 
             <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none w-full">

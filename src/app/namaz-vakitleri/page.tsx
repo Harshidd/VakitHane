@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Moon, RefreshCw, MapPin, Languages } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { HomeButton } from "@/components/HomeButton";
+import { BottomBanner } from "@/components/BottomBanner";
 
 /* ─── Types ─────────────────────────────────────────── */
 interface PrayerTimings {
@@ -417,6 +418,8 @@ export default function PrayerTimesPage() {
                     </div>
                 </article>
             </section>
+
+            <BottomBanner />
 
             <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none">
                 <div className="pointer-events-auto"><TabBar /></div>

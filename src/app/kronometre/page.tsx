@@ -7,6 +7,7 @@ import Link from "next/link";
 import { TabBar } from "@/components/TabBar";
 import { useLanguage } from "@/context/LanguageContext";
 import { HomeButton } from "@/components/HomeButton";
+import { BottomBanner } from "@/components/BottomBanner";
 
 interface Lap { n: number; time: number; delta: number; }
 
@@ -171,6 +172,8 @@ export default function KronometrePage() {
                     </div>
                 </article>
             </section>
+
+            <BottomBanner />
 
             <div className="fixed bottom-0 inset-x-0 flex justify-center pb-3 pt-4 bg-gradient-to-t from-background/95 to-transparent z-40 pointer-events-none w-full">
                 <div className="pointer-events-auto"><TabBar /></div>

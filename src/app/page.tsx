@@ -16,6 +16,7 @@ import { useCompletionSound, showTimerNotification, useNotificationPermission } 
 import { loadStats, saveSession, formatTotal } from "@/hooks/useSessionStats";
 import { useLanguage } from "@/context/LanguageContext";
 import { Languages } from "lucide-react";
+import { BottomBanner } from "@/components/BottomBanner";
 
 interface CatItem { id: string; name: string; icon: LucideIcon; href: string; desc: string; side: string; }
 
@@ -351,14 +352,6 @@ export default function Home() {
           )}
         </AnimatePresence>
 
-        {/* Footer */}
-        {!isRunning && (
-          <footer className="w-full flex justify-center py-2 relative z-10 shrink-0">
-            <span className="text-[9px] text-foreground/18 font-medium tracking-[0.22em] uppercase select-none">
-              {t("design_by")} <span className="font-bold text-foreground/30">MRK</span>
-            </span>
-          </footer>
-        )}
       </div>
 
       {/* ── SEO SECTION ── */}
@@ -380,6 +373,8 @@ export default function Home() {
           </article>
         </section>
       )}
+
+      {!isRunning && <BottomBanner />}
 
     </div>
   );
