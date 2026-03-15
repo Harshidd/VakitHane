@@ -4,18 +4,21 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Clock, BookOpen, Moon, Calendar, Wind } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
-const tabs = [
-    { label: "Zamanlayıcı", icon: Clock, href: "/" },
-    { label: "Sınavlar", icon: BookOpen, href: "/sinav-sayaci" },
-    { label: "Vakitler", icon: Moon, href: "/namaz-vakitleri" },
-    { label: "Etkinlikler", icon: Calendar, href: "/ozel-gunler" },
-    { label: "Meditasyon", icon: Wind, href: "/meditasyon" },
+const getTabs = (t: (s: string) => string) => [
+    { label: t("tab_timer"), icon: Clock, href: "/" },
+    { label: t("tab_exams"), icon: BookOpen, href: "/sinav-sayaci" },
+    { label: t("tab_prayers"), icon: Moon, href: "/namaz-vakitleri" },
+    { label: t("tab_events"), icon: Calendar, href: "/ozel-gunler" },
+    { label: t("tab_meditation"), icon: Wind, href: "/meditasyon" },
 ];
 
 /** inline=true → header'ın içine gömülü hali */
 export function TabBar({ inline = false }: { inline?: boolean }) {
     const pathname = usePathname();
+    const { t } = useLanguage();
+    const tabs = getTabs(t);
 
     const inner = (
         <div className="glass shadow-md shadow-black/5 dark:shadow-white/5 p-1.5 rounded-2xl flex gap-0.5 bg-white/60 dark:bg-black/40 overflow-x-auto scrollbar-hide">

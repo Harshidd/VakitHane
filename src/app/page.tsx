@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { useCompletionSound, showTimerNotification, useNotificationPermission } from "@/hooks/useTimerAlerts";
 import { loadStats, saveSession, formatTotal } from "@/hooks/useSessionStats";
+import { useLanguage } from "@/context/LanguageContext";
+import { Languages } from "lucide-react";
 
 interface CatItem { id: string; name: string; icon: LucideIcon; href: string; desc: string; side: string; }
 
@@ -35,27 +37,42 @@ const PRESET_GROUPS = [
 ];
 const PRESETS = PRESET_GROUPS.flatMap(g => g.items);
 
-const CATEGORIES: CatItem[] = [
-  { id: "school", name: "Okul & Sınavlar", icon: BookOpen, href: "/sinav-sayaci", desc: "Sınav Geri Sayımları", side: "left" },
-  { id: "religion", name: "İnanç & İbadet", icon: Moon, href: "/namaz-vakitleri", desc: "Namaz & İftar", side: "left" },
-  { id: "stopwatch", name: "Kronometre", icon: Hourglass, href: "/kronometre", desc: "Süre Ölçümü", side: "left" },
-  { id: "space", name: "Rahatlama", icon: Wind, href: "/meditasyon", desc: "Nefes & Meditasyon", side: "right" },
-  { id: "events", name: "Özel Günler", icon: Calendar, href: "/ozel-gunler", desc: "Etkinlik Sayaçları", side: "right" },
-  { id: "worldclock", name: "Dünya Saatleri", icon: Globe2, href: "/dunya-saatleri", desc: "Şehirler & Saat Dilimleri", side: "right" },
+const getCategories = (t: (s: string) => string): CatItem[] => [
+  { id: "school", name: t("school_exams"), icon: BookOpen, href: "/sinav-sayaci", desc: t("exam_countdowns"), side: "left" },
+  { id: "religion", name: t("faith_worship"), icon: Moon, href: "/namaz-vakitleri", desc: t("namaz_iftar"), side: "left" },
+  { id: "stopwatch", name: t("stopwatch"), icon: Hourglass, href: "/kronometre", desc: t("time_measurement"), side: "left" },
+  { id: "space", name: t("relaxation"), icon: Wind, href: "/meditasyon", desc: t("breath_meditation"), side: "right" },
+  { id: "events", name: t("special_days"), icon: Calendar, href: "/ozel-gunler", desc: t("event_countdowns"), side: "right" },
+  { id: "worldclock", name: t("world_clocks"), icon: Globe2, href: "/dunya-saatleri", desc: t("cities_timezones"), side: "right" },
 ];
 
-const CLOCK_SIZE = 340;
+const DEFAULT_CLOCK_SIZE = 340;
 
 export default function Home() {
+  const { t, language, setLanguage } = useLanguage();
+  const CATEGORIES = getCategories(t);
   const [timeLeft, setTimeLeft] = useState(0);
   const [initialTime, setInitialTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const [stats, setStats] = useState({ sessions: 0, totalSeconds: 0 });
   const [activePreset, setActivePreset] = useState<number | null>(null);
+  const [clockSize, setClockSize] = useState(DEFAULT_CLOCK_SIZE);
 
   const playChime = useCompletionSound();
   useNotificationPermission();
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 640) setClockSize(280);
+      else if (width < 1024) setClockSize(320);
+      else setClockSize(DEFAULT_CLOCK_SIZE);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => { setStats(loadStats()); }, []);
   useEffect(() => {
@@ -122,6 +139,13 @@ export default function Home() {
             <TabBar inline />
 
             <div className="flex gap-1 items-center shrink-0">
+              <button
+                onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
+                className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5"
+              >
+                <Languages size={14} />
+                <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
+              </button>
               <button className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100">
                 <Settings size={14} />
               </button>
@@ -151,14 +175,14 @@ export default function Home() {
                 </div>
 
                 {/* ── CENTER ── */}
-                <div className="flex flex-col items-center shrink-0">
-                  <div className="relative flex items-center justify-center" style={{ width: CLOCK_SIZE, height: CLOCK_SIZE }}>
-                    <ProgressArc progress={isPaused ? progress : 1} size={CLOCK_SIZE} />
+                <div className="flex flex-col items-center shrink-0 w-full lg:w-auto">
+                  <div className="relative flex items-center justify-center" style={{ width: clockSize, height: clockSize }}>
+                    <ProgressArc progress={isPaused ? progress : 1} size={clockSize} />
                     <VintageWallClock className="w-full h-full" />
                   </div>
 
                   {/* ── Control band — preset groups + inputs + start ── */}
-                  <div className="mt-7 flex items-stretch gap-0 glass border border-foreground/12 rounded-2xl overflow-hidden shadow-lg">
+                  <div className="mt-7 flex flex-col md:flex-row items-stretch md:items-center gap-0 glass border border-foreground/12 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg w-[90%] sm:w-auto">
 
                     {/* LGS group */}
                     <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
@@ -179,7 +203,7 @@ export default function Home() {
                     </div>
 
                     {/* YKS group */}
-                    <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
+                    <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-b md:border-b-0 md:border-r border-foreground/10">
                       <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">YKS</span>
                       <div className="flex gap-1.5">
                         {PRESET_GROUPS[1].items.map(p => {
@@ -197,8 +221,8 @@ export default function Home() {
                     </div>
 
                     {/* Custom hour:min */}
-                    <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-r border-foreground/10">
-                      <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">Özel Süre</span>
+                    <div className="flex flex-col items-start gap-1.5 px-4 py-3 border-b md:border-b-0 md:border-r border-foreground/10">
+                      <span className="text-[11px] font-semibold text-foreground/40 tracking-wide mb-0.5">{t("custom_duration")}</span>
                       <div className="flex items-center gap-2">
                         <input
                           type="number" min="0" max="23"
@@ -225,13 +249,13 @@ export default function Home() {
                         whileTap={{ scale: 0.95 }}
                         onClick={start}
                         disabled={timeLeft === 0}
-                        className={`px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all shadow-md ${timeLeft === 0
+                        className={`w-full md:w-auto px-6 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md ${timeLeft === 0
                           ? "bg-foreground/15 text-foreground/25 cursor-not-allowed"
                           : "bg-foreground text-background shadow-foreground/25 hover:shadow-foreground/40 hover:scale-[1.02]"
                           }`}
                       >
                         <Play fill="currentColor" size={15} />
-                        Başlat
+                        {t("start")}
                       </motion.button>
                     </div>
                   </div>
@@ -260,7 +284,7 @@ export default function Home() {
                 <div className="relative z-10 flex flex-col items-center">
                   <div className="flex items-center gap-2 mb-6 opacity-35 tracking-widest uppercase text-xs font-bold">
                     <Target size={14} className="animate-pulse" />
-                    Odaklanma Süreci
+                    {t("focus_process")}
                   </div>
                   <div className="flex items-baseline justify-center font-bold tracking-tighter tabular-nums leading-none">
                     {H > 0 && (
@@ -280,11 +304,11 @@ export default function Home() {
                   <div className="flex items-center gap-3 mt-10">
                     <motion.button whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }} onClick={stop}
                       className="px-6 py-3 rounded-2xl glass border border-foreground/15 text-foreground font-semibold text-sm flex items-center gap-2 hover:bg-foreground/15 transition-all">
-                      <RotateCcw size={16} /> Durdur
+                      <RotateCcw size={16} /> {t("stop")}
                     </motion.button>
                     <motion.button whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }} onClick={pause}
                       className="px-8 py-3 rounded-2xl bg-foreground text-background font-bold text-sm shadow-lg shadow-foreground/25 flex items-center gap-2">
-                      <Pause fill="currentColor" size={16} /> Duraklat
+                      <Pause fill="currentColor" size={16} /> {t("pause")}
                     </motion.button>
                   </div>
                 </div>
@@ -308,14 +332,14 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
               className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 glass px-5 py-3 rounded-2xl shadow-xl border border-foreground/10"
             >
-              <span className="text-sm font-bold opacity-70">Duraklatıldı — {pad(H)}:{pad(M)}:{pad(S)}</span>
+              <span className="text-sm font-bold opacity-70">{t("paused")} — {pad(H)}:{pad(M)}:{pad(S)}</span>
               <motion.button whileTap={{ scale: 0.95 }} onClick={start}
                 className="px-4 py-1.5 rounded-xl bg-foreground text-background text-xs font-bold flex items-center gap-1">
-                <Play fill="currentColor" size={12} /> Devam
+                <Play fill="currentColor" size={12} /> {t("resume")}
               </motion.button>
               <motion.button whileTap={{ scale: 0.95 }} onClick={stop}
                 className="px-4 py-1.5 rounded-xl glass border border-foreground/15 text-xs font-semibold flex items-center gap-1">
-                <RotateCcw size={12} /> Sıfırla
+                <RotateCcw size={12} /> {t("reset")}
               </motion.button>
             </motion.div>
           )}
@@ -325,7 +349,7 @@ export default function Home() {
         {!isRunning && (
           <footer className="w-full flex justify-center py-2 relative z-10 shrink-0">
             <span className="text-[9px] text-foreground/18 font-medium tracking-[0.22em] uppercase select-none">
-              design by <span className="font-bold text-foreground/30">MRK</span>
+              {t("design_by")} <span className="font-bold text-foreground/30">MRK</span>
             </span>
           </footer>
         )}

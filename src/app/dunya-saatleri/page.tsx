@@ -3,37 +3,38 @@
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Timer, ArrowLeft } from "lucide-react";
+import { Timer, ArrowLeft, Languages } from "lucide-react";
 import { TabBar } from "@/components/TabBar";
+import { useLanguage } from "@/context/LanguageContext";
 
 const Globe3D = dynamic(() => import("@/components/Globe3D").then(m => m.Globe3D), { ssr: false });
 
-const CITIES = [
-    { name: "İstanbul", tz: "Europe/Istanbul", flag: "🇹🇷" },
-    { name: "Ankara", tz: "Europe/Istanbul", flag: "🇹🇷" },
-    { name: "Londra", tz: "Europe/London", flag: "🇬🇧" },
-    { name: "Paris", tz: "Europe/Paris", flag: "🇫🇷" },
-    { name: "Berlin", tz: "Europe/Berlin", flag: "🇩🇪" },
-    { name: "Moskova", tz: "Europe/Moscow", flag: "🇷🇺" },
-    { name: "Dubai", tz: "Asia/Dubai", flag: "🇦🇪" },
-    { name: "Mumbai", tz: "Asia/Kolkata", flag: "🇮🇳" },
-    { name: "Singapur", tz: "Asia/Singapore", flag: "🇸🇬" },
-    { name: "Tokyo", tz: "Asia/Tokyo", flag: "🇯🇵" },
-    { name: "Şangay", tz: "Asia/Shanghai", flag: "🇨🇳" },
-    { name: "Sidney", tz: "Australia/Sydney", flag: "🇦🇺" },
-    { name: "New York", tz: "America/New_York", flag: "🇺🇸" },
-    { name: "Los Angeles", tz: "America/Los_Angeles", flag: "🇺🇸" },
-    { name: "São Paulo", tz: "America/Sao_Paulo", flag: "🇧🇷" },
+const getCities = (t: (s: string) => string) => [
+    { name: t("Istanbul"), tz: "Europe/Istanbul", flag: "🇹🇷" },
+    { name: t("Ankara"), tz: "Europe/Istanbul", flag: "🇹🇷" },
+    { name: t("London"), tz: "Europe/London", flag: "🇬🇧" },
+    { name: t("Paris"), tz: "Europe/Paris", flag: "🇫🇷" },
+    { name: t("Berlin"), tz: "Europe/Berlin", flag: "🇩🇪" },
+    { name: t("Moscow"), tz: "Europe/Moscow", flag: "🇷🇺" },
+    { name: t("Dubai"), tz: "Asia/Dubai", flag: "🇦🇪" },
+    { name: t("Mumbai"), tz: "Asia/Kolkata", flag: "🇮🇳" },
+    { name: t("Singapore"), tz: "Asia/Singapore", flag: "🇸🇬" },
+    { name: t("Tokyo"), tz: "Asia/Tokyo", flag: "🇯🇵" },
+    { name: t("Shanghai"), tz: "Asia/Shanghai", flag: "🇨🇳" },
+    { name: t("Sydney"), tz: "Australia/Sydney", flag: "🇦🇺" },
+    { name: t("New York"), tz: "America/New_York", flag: "🇺🇸" },
+    { name: t("Los Angeles"), tz: "America/Los_Angeles", flag: "🇺🇸" },
+    { name: t("Sao Paulo"), tz: "America/Sao_Paulo", flag: "🇧🇷" },
 ];
 
-function CityRow({ city }: { city: typeof CITIES[0] }) {
+function CityRow({ city, language }: { city: any, language: string }) {
     const [time, setTime] = useState("--:--");
     const [isNight, setIsNight] = useState(false);
 
     useEffect(() => {
         const update = () => {
             const now = new Date();
-            setTime(now.toLocaleTimeString("tr-TR", { timeZone: city.tz, hour: "2-digit", minute: "2-digit" }));
+            setTime(now.toLocaleTimeString(language === "tr" ? "tr-TR" : "en-US", { timeZone: city.tz, hour: "2-digit", minute: "2-digit" }));
             const h = parseInt(now.toLocaleTimeString("en-US", { timeZone: city.tz, hour: "2-digit", hour12: false }));
             setIsNight(h < 7 || h >= 22);
         };
@@ -57,18 +58,29 @@ function CityRow({ city }: { city: typeof CITIES[0] }) {
 }
 
 export default function DunyaSaatleriPage() {
+    const { t, language, setLanguage } = useLanguage();
+    const CITIES = getCities(t);
     return (
         <div className="min-h-screen overflow-y-auto overflow-x-hidden scrollbar-hide flex flex-col dark" style={{ background: "#0d0e14", color: "#eeedf5" }}>
             <div className="flex flex-col min-h-screen shrink-0 relative z-10 w-full">
 
                 {/* Header */}
-                <header className="flex items-center justify-between px-5 py-3 border-b border-white/5 shrink-0">
+                <header className="flex flex-col md:flex-row items-center justify-between px-5 py-3 border-b border-white/5 shrink-0 gap-3">
                     <Link href="/" className="flex items-center gap-2 text-white/40 hover:text-white/80 transition-colors text-xs font-semibold">
                         <ArrowLeft size={14} />
                         VakitHane
                     </Link>
-                    <span className="text-[13px] text-white/40 tracking-wide font-semibold">Dünya Saatleri</span>
-                    <div className="w-20" /> {/* spacer */}
+                    
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
+                            className="p-2 rounded-full hover:bg-white/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-white/10"
+                        >
+                            <Languages size={14} />
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-white">{language}</span>
+                        </button>
+                        <span className="text-[13px] text-white/40 tracking-wide font-semibold">{t("tab_world_clocks")}</span>
+                    </div>
                 </header>
 
                 {/* Content */}
@@ -78,7 +90,7 @@ export default function DunyaSaatleriPage() {
                     <div className="relative flex-1 flex items-center justify-center overflow-hidden">
                         <Globe3D />
                         <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] text-white/15 tracking-widest select-none pointer-events-none">
-                            sürükle · döndür
+                            {t("drag_rotate")}
                         </p>
                     </div>
 
@@ -87,13 +99,13 @@ export default function DunyaSaatleriPage() {
 
                         {/* Panel header */}
                         <div className="px-4 py-3 border-b border-white/5 shrink-0">
-                            <span className="text-[12px] font-semibold text-white/40 tracking-wide">Şehir Saatleri</span>
+                            <span className="text-[12px] font-semibold text-white/40 tracking-wide">{t("city_times")}</span>
                         </div>
 
                         {/* Scrollable city list */}
                         <div className="flex-1 overflow-y-auto py-2 px-1 scrollbar-hide">
                             {CITIES.map(city => (
-                                <CityRow key={city.name} city={city} />
+                                <CityRow key={city.name} city={city} language={language} />
                             ))}
                         </div>
 

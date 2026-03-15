@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { TabBar } from "@/components/TabBar";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Moon, RefreshCw, MapPin } from "lucide-react";
+import { ChevronLeft, ChevronRight, Moon, RefreshCw, MapPin, Languages } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 /* ─── Types ─────────────────────────────────────────── */
 interface PrayerTimings {
@@ -20,23 +21,32 @@ const HIJRI_TR: Record<string, string> = {
     "Rajab": "Recep", "Sha'ban": "Şaban", "Ramadan": "Ramazan",
     "Shawwal": "Şevval", "Dhu al-qi'dah": "Zilkade", "Dhu al-hijjah": "Zilhicce",
 };
-function toTrHijri(day: string, monthEn: string, year: string) {
-    // API returns Arabic month names in various formats — normalize lowercase then map
+
+const HIJRI_EN: Record<string, string> = {
+    "Muharram": "Muharram", "Safar": "Safar",
+    "Rabi al-awwal": "Rabi' al-awwal", "Rabi al-thani": "Rabi' al-thani",
+    "Jumada al-ula": "Jumada al-ula", "Jumada al-akhirah": "Jumada al-akhirah",
+    "Rajab": "Rajab", "Sha'ban": "Sha'ban", "Ramadan": "Ramadan",
+    "Shawwal": "Shawwal", "Dhu al-qi'dah": "Dhu al-Qi'dah", "Dhu al-hijjah": "Dhu al-Hijjah",
+};
+
+function toHijriLabel(day: string, monthEn: string, year: string, lang: string) {
     const normalized = monthEn.toLowerCase().replace(/ḥ/g, "h").replace(/ā/g, "a").replace(/ī/g, "i")
         .replace(/ū/g, "u").replace(/ṭ/g, "t").replace(/ẓ/g, "z").replace(/ʿ/g, "'");
-    const trMonth = Object.entries(HIJRI_TR).find(([k]) => normalized.includes(k.toLowerCase()))?.[1] ?? monthEn;
+    const map = lang === "tr" ? HIJRI_TR : HIJRI_EN;
+    const trMonth = Object.entries(map).find(([k]) => normalized.includes(k.toLowerCase()))?.[1] ?? monthEn;
     return `${day} ${trMonth} ${year}`;
 }
 
 /* ─── Prayer display order (Diyanet sırası) ─────────── */
-const PRAYER_KEYS: { key: keyof PrayerTimings; label: string }[] = [
-    { key: "Imsak", label: "İmsak" },
-    { key: "Fajr", label: "Sabah" },
-    { key: "Sunrise", label: "Güneş" },
-    { key: "Dhuhr", label: "Öğle" },
-    { key: "Asr", label: "İkindi" },
-    { key: "Maghrib", label: "Akşam" },
-    { key: "Isha", label: "Yatsı" },
+const getPrayerKeys = (t: (s: string) => string): { key: keyof PrayerTimings; label: string }[] => [
+    { key: "Imsak", label: t("imsak") },
+    { key: "Fajr", label: t("fajr") },
+    { key: "Sunrise", label: t("sunrise") },
+    { key: "Dhuhr", label: t("dhuhr") },
+    { key: "Asr", label: t("asr") },
+    { key: "Maghrib", label: t("maghrib") },
+    { key: "Isha", label: t("isha") },
 ];
 
 /* ─── Cities ────────────────────────────────────────── */
@@ -52,7 +62,7 @@ const CITIES = [
 ];
 
 /* ─── Aladhan API (Diyanet method=13) ───────────────── */
-async function fetchPrayerTimes(city: string, offsetDays = 0): Promise<DayData | null> {
+async function fetchPrayerTimes(city: string, lang: string, offsetDays = 0): Promise<DayData | null> {
     const d = new Date();
     d.setDate(d.getDate() + offsetDays);
     const dd = String(d.getDate()).padStart(2, "0");
@@ -68,7 +78,7 @@ async function fetchPrayerTimes(city: string, offsetDays = 0): Promise<DayData |
         const { day, month, year } = dt.hijri;
         return {
             timings: timings as PrayerTimings,
-            hijri: toTrHijri(day, month.en, year),
+            hijri: toHijriLabel(day, month.en, year, lang),
             gregorian: dt.gregorian.date,
             ramadan: month.number === 9,
         };
@@ -105,6 +115,8 @@ const CAT_LABEL: Record<string, string> = {
 /* Namaz Vakitleri Tab                                    */
 /* ══════════════════════════════════════════════════════ */
 function PrayerTab() {
+    const { t, language } = useLanguage();
+    const PRAYER_KEYS = getPrayerKeys(t);
     const [dayOffset, setDayOffset] = useState(0);
     const [city, setCity] = useState("Ankara");
     const [data, setData] = useState<DayData | null>(null);
@@ -118,17 +130,17 @@ function PrayerTab() {
 
     const load = useCallback(async () => {
         setLoading(true);
-        setData(await fetchPrayerTimes(city, dayOffset));
+        setData(await fetchPrayerTimes(city, language, dayOffset));
         setLoading(false);
-    }, [city, dayOffset]);
+    }, [city, dayOffset, language]);
 
     useEffect(() => { load(); }, [load]);
 
     const displayDate = new Date();
     displayDate.setDate(displayDate.getDate() + dayOffset);
-    const dayLabel = dayOffset === 0 ? "Bugün" : dayOffset === 1 ? "Yarın" :
-        dayOffset === -1 ? "Dün" :
-            displayDate.toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long" });
+    const dayLabel = dayOffset === 0 ? t("today") : dayOffset === 1 ? t("tomorrow") :
+        dayOffset === -1 ? t("yesterday") :
+            displayDate.toLocaleDateString(language === "tr" ? "tr-TR" : "en-US", { weekday: "long", day: "numeric", month: "long" });
 
     let nextKey: keyof PrayerTimings | null = null;
     if (data && dayOffset === 0) {
@@ -161,7 +173,7 @@ function PrayerTab() {
                     <div className="text-center leading-snug">
                         <div className="text-sm font-bold mb-0.5">{dayLabel}</div>
                         {data && <div className="text-[10px] text-foreground/50 font-medium whitespace-nowrap">
-                            {displayDate.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })} <span className="opacity-40 px-0.5">·</span> {data.hijri}
+                            {displayDate.toLocaleDateString(language === "tr" ? "tr-TR" : "en-US", { day: "numeric", month: "long", year: "numeric" })} <span className="opacity-40 px-0.5">·</span> {data.hijri}
                         </div>}
                     </div>
                     <button onClick={() => setDayOffset(d => d + 1)}
@@ -183,27 +195,29 @@ function PrayerTab() {
                 </div>
             ) : !data ? (
                 <div className="glass-panel p-10 text-center text-sm text-foreground/40">
-                    ⚠️ Vakitler yüklenemedi. İnternet bağlantınızı kontrol edin.
+                    {t("error_loading")}
                 </div>
             ) : (
                 <>
                     {/* Next prayer banner */}
                     {nextKey && dayOffset === 0 && (() => {
                         const entry = PRAYER_KEYS.find(p => p.key === nextKey)!;
-                        const t = data!.timings[nextKey];
-                        const [h, m] = t.split(":").map(Number);
+                        const timingStr = data!.timings[nextKey];
+                        const [h, m] = timingStr.split(":").map(Number);
                         const diff = h * 60 + m - (now.getHours() * 60 + now.getMinutes());
                         return (
                             <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
                                 className="glass-panel px-6 py-5 flex items-center justify-between">
                                 <div>
                                     <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-foreground/35 mb-2">
-                                        Bir Sonraki Vakit
+                                        {t("next_prayer")}
                                     </div>
                                     <div className="text-4xl font-bold tracking-tight mb-1">{entry.label}</div>
                                     <div className="text-sm text-foreground/45 font-medium">
-                                        {t} &nbsp;·&nbsp;
-                                        {diff >= 60 ? `${Math.floor(diff / 60)} sa ${diff % 60} dk` : `${diff} dakika`} kaldı
+                                        {timingStr} &nbsp;·&nbsp;
+                                        {diff >= 60 
+                                            ? `${Math.floor(diff / 60)} ${language === "tr" ? "sa" : "hr"} ${diff % 60} ${language === "tr" ? "dk" : "min"}` 
+                                            : `${diff} ${language === "tr" ? "dakika" : "minutes"}`} {t("remaining")}
                                     </div>
                                 </div>
                                 <Moon size={48} className="opacity-8" />
@@ -214,10 +228,10 @@ function PrayerTab() {
                     {/* Ramazan — only when hijri month = 9 */}
                     {data.ramadan && dayOffset === 0 && (
                         <div className="flex items-center justify-between bg-emerald-500/10 border border-emerald-400/25 rounded-2xl px-5 py-3">
-                            <span className="text-sm font-bold text-emerald-400">🌙 Ramazan · {data.hijri}</span>
+                            <span className="text-sm font-bold text-emerald-400">🌙 {t("ramadan")} · {data.hijri}</span>
                             <div className="text-right text-xs text-emerald-400/80 space-y-0.5">
-                                <div>İftar <span className="font-bold text-emerald-300">{data.timings.Maghrib}</span></div>
-                                <div>Sahur <span className="font-bold text-emerald-300">{data.timings.Imsak}</span></div>
+                                <div>{t("iftar")} <span className="font-bold text-emerald-300">{data.timings.Maghrib}</span></div>
+                                <div>{t("sahur")} <span className="font-bold text-emerald-300">{data.timings.Imsak}</span></div>
                             </div>
                         </div>
                     )}
@@ -225,8 +239,8 @@ function PrayerTab() {
                     {/* Prayer grid — 4 columns, 2 rows (4+3) */}
                     <div className="grid grid-cols-4 gap-2">
                         {PRAYER_KEYS.map(({ key, label }) => {
-                            const t = data!.timings[key];
-                            const [h, mm2] = t.split(":").map(Number);
+                            const timingStr = data!.timings[key];
+                            const [h, mm2] = timingStr.split(":").map(Number);
                             const nowMin = now.getHours() * 60 + now.getMinutes();
                             const isPast = dayOffset === 0 && h * 60 + mm2 < nowMin && key !== "Imsak";
                             const isNext = key === nextKey && dayOffset === 0;
@@ -238,7 +252,7 @@ function PrayerTab() {
                                         }`}
                                 >
                                     <div className="text-[9px] font-bold uppercase tracking-widest text-foreground/45 mb-1">{label}</div>
-                                    <div className="text-[26px] sm:text-3xl font-bold tabular-nums tracking-tighter leading-none">{t}</div>
+                                    <div className="text-[26px] sm:text-3xl font-bold tabular-nums tracking-tighter leading-none">{timingStr}</div>
                                     {isNext && (
                                         <span className="absolute top-2 right-2 text-[7px] bg-foreground/15 px-1.5 py-0.5 rounded-full font-bold text-foreground/55">
                                             ▶
@@ -250,7 +264,7 @@ function PrayerTab() {
                     </div>
 
                     <p className="text-center text-[9px] text-foreground/20 font-medium">
-                        Kaynak: Diyanet yöntemi · api.aladhan.com
+                        {t("source")}: Diyanet {t("method")} · api.aladhan.com
                     </p>
                 </>
             )}
@@ -262,6 +276,7 @@ function PrayerTab() {
 /* Dini Günler Tab                                        */
 /* ══════════════════════════════════════════════════════ */
 function ReligiousDaysTab() {
+    const { t, language } = useLanguage();
     const [filter, setFilter] = useState("hepsi");
     const now = new Date();
 
@@ -274,9 +289,9 @@ function ReligiousDaysTab() {
     const filtered = filter === "hepsi" ? enriched : enriched.filter(d => d.cat === filter);
 
     const FILTERS = [
-        { key: "hepsi", label: "Tümü" }, { key: "bayram", label: "Bayramlar" },
-        { key: "kandil", label: "Kandiller" }, { key: "ramazan", label: "Ramazan" },
-        { key: "dini", label: "Diğer" },
+        { key: "hepsi", label: t("all") }, { key: "bayram", label: t("holidays") },
+        { key: "kandil", label: t("kandils") }, { key: "ramazan", label: t("ramadan") },
+        { key: "dini", label: t("others") },
     ];
 
     return (
@@ -303,18 +318,18 @@ function ReligiousDaysTab() {
                             <div className="min-w-0">
                                 <div className="font-bold text-sm">{d.name}</div>
                                 <div className="text-[10px] text-foreground/35 font-medium mt-0.5">
-                                    {d.target.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
+                                    {d.target.toLocaleDateString(language === "tr" ? "tr-TR" : "en-US", { day: "numeric", month: "long", year: "numeric" })}
                                     <span className="mx-1.5 opacity-40">·</span>
-                                    <span className="uppercase tracking-wide">{CAT_LABEL[d.cat]}</span>
+                                    <span className="uppercase tracking-wide">{t(d.cat)}</span>
                                 </div>
                             </div>
                         </div>
                         <div className="shrink-0 ml-3 text-right">
-                            {d.days < -1 ? <span className="text-[10px] text-foreground/25 font-bold">Geçti</span> :
-                                d.days <= 0 ? <span className="text-xs font-bold text-amber-400">Bugün 🎊</span> :
-                                    d.days === 1 ? <span className="text-xs font-bold text-amber-300">Yarın</span> :
-                                        d.days <= 7 ? <span className="text-sm font-bold text-amber-200">{d.days} gün</span> :
-                                            <span className="text-sm font-bold">{d.days}<span className="text-[9px] text-foreground/35 ml-0.5">gün</span></span>
+                            {d.days < -1 ? <span className="text-[10px] text-foreground/25 font-bold">{t("passed")}</span> :
+                                d.days <= 0 ? <span className="text-xs font-bold text-amber-400">{t("today")} 🎊</span> :
+                                    d.days === 1 ? <span className="text-xs font-bold text-amber-300">{t("tomorrow")}</span> :
+                                        d.days <= 7 ? <span className="text-sm font-bold text-amber-200">{d.days} {t("days_left")}</span> :
+                                            <span className="text-sm font-bold">{d.days}<span className="text-[9px] text-foreground/35 ml-0.5">{t("days_left")}</span></span>
                             }
                         </div>
                     </motion.div>
@@ -332,20 +347,31 @@ function ReligiousDaysTab() {
 /* Page                                                   */
 /* ══════════════════════════════════════════════════════ */
 export default function PrayerTimesPage() {
+    const { t, language, setLanguage } = useLanguage();
     const [tab, setTab] = useState<"namaz" | "dinigunler">("namaz");
     return (
         <div className="bg-mesh-default min-h-screen overflow-y-auto overflow-x-hidden scrollbar-hide">
             <div className="flex flex-col min-h-screen shrink-0 relative z-10 w-full">
 
-                <header className="sticky top-0 z-30 flex justify-center pt-4 pb-3 backdrop-blur-md bg-background/70 border-b border-foreground/5">
+                <header className="sticky top-0 z-30 flex flex-col md:flex-row items-center justify-between px-4 py-3 backdrop-blur-md bg-background/70 border-b border-foreground/5 gap-3">
                     <div className="flex gap-1 p-1 glass rounded-2xl border border-foreground/10 shadow-md">
                         <button onClick={() => setTab("namaz")}
-                            className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${tab === "namaz" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
-                            Namaz Vakitleri
+                            className={`px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${tab === "namaz" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
+                            {t("prayer_times")}
                         </button>
                         <button onClick={() => setTab("dinigunler")}
-                            className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${tab === "dinigunler" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
-                            Dini Günler
+                            className={`px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${tab === "dinigunler" ? "bg-foreground text-background" : "text-foreground/45 hover:text-foreground"}`}>
+                            {t("religious_days")}
+                        </button>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                         <button
+                            onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
+                            className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5"
+                        >
+                            <Languages size={14} />
+                            <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
                         </button>
                     </div>
                 </header>

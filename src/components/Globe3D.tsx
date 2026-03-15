@@ -2,22 +2,24 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { useLanguage } from "@/context/LanguageContext";
 
-const CITIES = [
-    { name: "İstanbul", lat: 41.01, lon: 28.95 },
-    { name: "Londra", lat: 51.51, lon: -0.13 },
-    { name: "Paris", lat: 48.85, lon: 2.35 },
-    { name: "Berlin", lat: 52.52, lon: 13.40 },
-    { name: "Moskova", lat: 55.75, lon: 37.62 },
-    { name: "Dubai", lat: 25.20, lon: 55.27 },
-    { name: "Mumbai", lat: 19.08, lon: 72.88 },
-    { name: "Singapur", lat: 1.35, lon: 103.82 },
-    { name: "Tokyo", lat: 35.68, lon: 139.69 },
-    { name: "Şangay", lat: 31.23, lon: 121.47 },
-    { name: "Sidney", lat: -33.87, lon: 151.21 },
-    { name: "New York", lat: 40.71, lon: -74.01 },
-    { name: "Los Angeles", lat: 34.05, lon: -118.24 },
-    { name: "São Paulo", lat: -23.55, lon: -46.63 },
+const getCities = (t: (s: string) => string) => [
+    { name: t("Istanbul"), lat: 41.01, lon: 28.95 },
+    { name: t("Ankara"), lat: 41.01, lon: 28.95 },
+    { name: t("London"), lat: 51.51, lon: -0.13 },
+    { name: t("Paris"), lat: 48.85, lon: 2.35 },
+    { name: t("Berlin"), lat: 52.52, lon: 13.40 },
+    { name: t("Moscow"), lat: 55.75, lon: 37.62 },
+    { name: t("Dubai"), lat: 25.20, lon: 55.27 },
+    { name: t("Mumbai"), lat: 19.08, lon: 72.88 },
+    { name: t("Singapore"), lat: 1.35, lon: 103.82 },
+    { name: t("Tokyo"), lat: 35.68, lon: 139.69 },
+    { name: t("Shanghai"), lat: 31.23, lon: 121.47 },
+    { name: t("Sydney"), lat: -33.87, lon: 151.21 },
+    { name: t("New York"), lat: 40.71, lon: -74.01 },
+    { name: t("Los Angeles"), lat: 34.05, lon: -118.24 },
+    { name: t("Sao Paulo"), lat: -23.55, lon: -46.63 },
 ];
 
 function ll2v3(lat: number, lon: number, r: number) {
@@ -31,6 +33,8 @@ function ll2v3(lat: number, lon: number, r: number) {
 }
 
 export function Globe3D() {
+    const { t, language } = useLanguage();
+    const CITIES = getCities(t);
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -234,7 +238,7 @@ export function Globe3D() {
             if (el.contains(renderer.domElement)) el.removeChild(renderer.domElement);
             if (el.contains(labelLayer)) el.removeChild(labelLayer);
         };
-    }, []);
+    }, [language]);
 
     return (
         <div

@@ -64,6 +64,8 @@ export const metadata: Metadata = {
   category: "productivity",
 };
 
+import { LanguageProvider } from "@/context/LanguageContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -100,7 +102,9 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-background text-foreground overflow-x-hidden min-h-screen">
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

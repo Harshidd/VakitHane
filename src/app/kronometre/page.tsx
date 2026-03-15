@@ -2,13 +2,15 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, RotateCcw, Flag, Timer } from "lucide-react";
+import { Play, Pause, RotateCcw, Flag, Timer, Languages } from "lucide-react";
 import Link from "next/link";
 import { TabBar } from "@/components/TabBar";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Lap { n: number; time: number; delta: number; }
 
 export default function KronometrePage() {
+    const { t, language, setLanguage } = useLanguage();
     const [elapsed, setElapsed] = useState(0);
     const [running, setRunning] = useState(false);
     const [laps, setLaps] = useState<Lap[]>([]);
@@ -58,7 +60,17 @@ export default function KronometrePage() {
                     <Link href="/" className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity text-sm font-semibold">
                         <Timer size={18} /> VakitHane
                     </Link>
-                    <span className="text-[13px] text-foreground/45 tracking-wide font-semibold">Kronometre</span>
+                    
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
+                            className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-foreground/10"
+                        >
+                            <Languages size={14} />
+                            <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
+                        </button>
+                        <span className="text-[13px] text-foreground/45 tracking-wide font-semibold">{t("tab_stopwatch")}</span>
+                    </div>
                 </header>
 
                 {/* Big display */}
@@ -80,19 +92,19 @@ export default function KronometrePage() {
                         disabled={!running}
                         className="px-5 py-3 rounded-2xl glass border border-foreground/15 font-semibold text-sm flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-foreground/10 transition-all"
                     >
-                        <Flag size={16} /> Tur
+                        <Flag size={16} /> {t("lap")}
                     </motion.button>
 
                     {/* Start / Pause */}
                     <motion.button
                         whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                         onClick={toggle}
-                        className={`px-10 py-4 rounded-2xl font-bold text-lg flex items-center gap-2 shadow-lg transition-all ${running
+                        className={`px-6 sm:px-10 py-4 rounded-2xl font-bold text-lg flex items-center gap-2 shadow-lg transition-all ${running
                             ? "bg-amber-500 text-white shadow-amber-500/30"
                             : "bg-foreground text-background shadow-foreground/20"
                             }`}
                     >
-                        {running ? <><Pause fill="currentColor" size={20} /> Duraklat</> : <><Play fill="currentColor" size={20} /> Başlat</>}
+                        {running ? <><Pause fill="currentColor" size={20} /> {t("pause")}</> : <><Play fill="currentColor" size={20} /> {t("start")}</>}
                     </motion.button>
 
                     {/* Reset */}
@@ -101,7 +113,7 @@ export default function KronometrePage() {
                         onClick={reset}
                         className="px-5 py-3 rounded-2xl glass border border-foreground/15 font-semibold text-sm flex items-center gap-2 hover:bg-foreground/10 transition-all"
                     >
-                        <RotateCcw size={16} /> Sıfırla
+                        <RotateCcw size={16} /> {t("reset")}
                     </motion.button>
                 </div>
 
@@ -109,9 +121,9 @@ export default function KronometrePage() {
                 {laps.length > 0 && (
                     <div className="w-full max-w-md">
                         <div className="flex items-center justify-between text-[12px] tracking-wide text-foreground/50 font-semibold px-4 mb-2">
-                            <span>Tur</span>
-                            <span>Tur Süresi</span>
-                            <span>Toplam</span>
+                            <span>{t("lap")}</span>
+                            <span>{t("lap_time")}</span>
+                            <span>{t("total")}</span>
                         </div>
                         <div className="flex flex-col gap-2 max-h-72 overflow-y-auto scrollbar-hide">
                             {laps.map(lap => {

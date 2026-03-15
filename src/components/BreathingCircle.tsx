@@ -8,20 +8,25 @@ interface Props {
     phaseDur: number;
     color: string;
     timeRemain: number;
+    phase?: number;
     onClick?: () => void;
 }
 
-export function BreathingCircle({ running, phaseLabel, phaseDur, color, timeRemain, onClick }: Props) {
-    // If not running, stay small
-    const size = running && phaseLabel === "Nefes Al" ? 1.5 :
-        running && phaseLabel === "Tut" ? 1.5 :
-            running && phaseLabel === "Nefes Ver" ? 1 :
-                running && phaseLabel === "Bekle" ? 1 : 1.1; // default rest state
+import { useLanguage } from "@/context/LanguageContext";
 
-    const opacity = running && phaseLabel === "Nefes Al" ? 0.9 :
-        running && phaseLabel === "Tut" ? 1 :
-            running && phaseLabel === "Nefes Ver" ? 0.5 :
-                running && phaseLabel === "Bekle" ? 0.4 : 0.6; // default
+export function BreathingCircle({ running, phaseLabel, phaseDur, color, timeRemain, phase = 0, onClick }: Props) {
+    const { t } = useLanguage();
+    // If not running, stay small
+    // Use phase index for size and opacity to be independent of translated label
+    const size = running && phase === 0 ? 1.5 : // Inhale
+        running && phase === 1 ? 1.5 : // Hold
+            running && phase === 2 ? 1 : // Exhale
+                running && phase === 3 ? 1 : 1.1; // Wait/Rest
+
+    const opacity = running && phase === 0 ? 0.9 :
+        running && phase === 1 ? 1 :
+            running && phase === 2 ? 0.5 :
+                running && phase === 3 ? 0.4 : 0.6;
 
     return (
         <div className="relative flex items-center justify-center w-64 h-64 sm:w-80 sm:h-80">
@@ -52,7 +57,7 @@ export function BreathingCircle({ running, phaseLabel, phaseDur, color, timeRema
                         className="flex flex-col items-center justify-center"
                     >
                         <span className="text-2xl font-black text-foreground tracking-wide text-center leading-tight">
-                            {running ? phaseLabel : "Başla"}
+                            {running ? phaseLabel : t("start")}
                         </span>
                         {running && timeRemain > 0 && (
                             <span className="text-sm font-bold text-foreground/70 mt-1 tabular-nums">
@@ -61,7 +66,7 @@ export function BreathingCircle({ running, phaseLabel, phaseDur, color, timeRema
                         )}
                         {!running && (
                             <span className="text-[12px] text-foreground/45 mt-1 tracking-wide font-medium">
-                                Tıkla
+                                {t("click")}
                             </span>
                         )}
                     </motion.div>
