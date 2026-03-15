@@ -156,15 +156,15 @@ export default function KronometrePage() {
             <section className="w-full shrink-0 border-t border-foreground/5 bg-background/40 backdrop-blur-3xl py-20 pb-32 relative z-10">
                 <article className="max-w-3xl mx-auto px-6 text-foreground/80 flex flex-col gap-8">
                     <div className="space-y-3">
-                        <h2 className="text-2xl font-bold tracking-tight text-foreground">Online Hassas Kronometre ve Tur Sayacı</h2>
+                        <h2 className="text-2xl font-bold tracking-tight text-foreground">{t("seo_stop_t1")}</h2>
                         <p className="text-[15px] leading-relaxed opacity-90">
-                            Spor yaparken, yemek hazırlarken veya çalışma sürelerinizi analiz ederken ihtiyacınız olan hassasiyeti <strong>VakitHane Online Kronometre</strong> ile yakalayın. Milisaniye düzeyinde doğruluk payı ve tek tıkla tur (lap) ekleme özelliği sayesinde performansınızı anlık olarak takip edebilirsiniz.
+                            {t("seo_stop_p1")}
                         </p>
                     </div>
                     <div className="space-y-3">
-                        <h3 className="text-xl font-bold tracking-tight text-foreground">Verimlilik ve Süre Analizi</h3>
+                        <h3 className="text-xl font-bold tracking-tight text-foreground">{t("seo_stop_t2")}</h3>
                         <p className="text-[15px] leading-relaxed opacity-90">
-                            Minimalist tasarımı ve kullanım kolaylığı ile ön plana çıkan kronometremiz, en iyi ve en kötü tur sürelerinizi otomatik olarak işaretler. Reklamsız ve pürüzsüz arayüzümüz, tarayıcınız kapansa bile performansınızı etkilemeden arka planda çalışabilecek stabilitelikte tasarlanmıştır.
+                            {t("seo_stop_p2")}
                         </p>
                     </div>
                 </article>

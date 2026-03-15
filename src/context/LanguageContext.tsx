@@ -147,6 +147,91 @@ const translations: Translations = {
   "New York": { tr: "New York", en: "New York" },
   "Los Angeles": { tr: "Los Angeles", en: "Los Angeles" },
   "Sao Paulo": { tr: "São Paulo", en: "Sao Paulo" },
+
+  // --- SEO CONTENT ---
+  // Home
+  "seo_home_t1": { tr: "VakitHane: Online Zamanlayıcı ve Pomodoro Sayacı", en: "VakitHane: Online Timer and Pomodoro Counter" },
+  "seo_home_p1": { 
+    tr: "VakitHane, LGS, YKS, TYT, AYT gibi büyük sınavlara hazırlanan öğrenciler ve Pomodoro tekniği ile çalışma verimini artırmak isteyen herkes için tasarlanmış ücretsiz bir online zamanlayıcıdır.",
+    en: "VakitHane is a free online timer designed for students preparing for major exams and anyone looking to increase study productivity with the Pomodoro technique."
+  },
+  "seo_home_t2": { tr: "Sınava Özel Süreler ve Minimalist Tasarım", en: "Exam-Specific Durations and Minimalist Design" },
+  "seo_home_p2": {
+    tr: "Sözel 75 dk, Sayısal 80 dk, TYT 165 dk ve AYT 180 dk gibi hazır süre butonlarımızı kullanarak gerçek sınav deneyimine uygun zaman tutabilirsiniz.",
+    en: "You can keep time suitable for the real exam experience by using our ready-made duration buttons such as Verbal 75 min, Numerical 80 min, TYT 165 min and AYT 180 min."
+  },
+
+  // Prayer
+  "seo_prayer_t1": { tr: "İl İl Ezan Vakitleri ve Dini Günler Takvimi", en: "Provincial Prayer Times and Religious Days Calendar" },
+  "seo_prayer_p1": {
+    tr: "İstanbul, Ankara, İzmir ve tüm Türkiye illeri için Diyanet İşleri Başkanlığı verileriyle uyumlu imsak, güneş, öğle, ikindi, akşam ve yatsı vakitlerini anlık olarak takip edin.",
+    en: "Follow imsak, sunrise, dhuhr, asr, maghrib and isha times for Istanbul, Ankara, Izmir and all Turkish provinces in real time, compatible with Presidency of Religious Affairs data."
+  },
+  "seo_prayer_t2": { tr: "İftar Sayacı ve Hicri Tarih Bilgisi", en: "Iftar Counter and Hijri Date Information" },
+  "seo_prayer_p2": {
+    tr: "Modern ve sade arayüzümüz üzerinden sadece bugünkü vakitleri değil, yaklaşan dini gün ve gecelere ne kadar süre kaldığını da görebilirsiniz.",
+    en: "Through our modern and simple interface, you can see not only today's times, but also how much time is left until upcoming religious days and nights."
+  },
+
+  // Exam
+  "seo_exam_t1": { tr: "YKS, LGS ve KPSS'ye Kaç Gün Kaldı?", en: "How Many Days Left for YKS, LGS and KPSS?" },
+  "seo_exam_p1": {
+    tr: "VakitHane sınav geri sayım sayacı sayesinde YKS 2026, LGS, KPSS ve ALES gibi Türkiye'nin en büyük sınavlarına saniyesi saniyesine ne kadar süre kaldığını takip edebilirsiniz.",
+    en: "Thanks to the VakitHane exam countdown timer, you can follow exactly how much time is left for Turkey's biggest exams such as YKS 2026, LGS, KPSS and ALES."
+  },
+  "seo_exam_t2": { tr: "Motivasyonunuzu Yüksek Tutun", en: "Keep Your Motivation High" },
+  "seo_exam_p2": {
+    tr: "Sayfada yer alan motivasyon alıntıları ve sınavınıza kalan sürenin grafiksel gösterimi, stresinizi azaltırken çalışmalara daha iyi odaklanmanızı sağlar.",
+    en: "Motivation quotes on the page and the graphical representation of the time remaining for your exam help you focus better on your studies while reducing stress."
+  },
+
+  // Meditation
+  "seo_med_t1": { tr: "Doğa Sesleri Eşliğinde Nefes ve Meditasyon Egzersizleri", en: "Breathing and Meditation Exercises Accompanied by Nature Sounds" },
+  "seo_med_p1": {
+    tr: "Yoğun bir günün ardından rahatlamak için doğru teknikle nefes almak hayati önem taşır. Bilimsel olarak kanıtlanmış tekniklerle zihninizi sakinleştirin.",
+    en: "Breathing with the right technique is vital to relax after a busy day. Calm your mind with scientifically proven techniques."
+  },
+  "seo_med_t2": { tr: "Görsel Yönlendirme ve Farkındalık (Mindfulness)", en: "Visual Guidance and Mindfulness" },
+  "seo_med_p2": {
+    tr: "Genişleyen çember animasyonumuz ile zihninizi boşaltın. Yağmur, Şömine, Rüzgar ortam sesleriyle zen haline ulaşabilirsiniz.",
+    en: "Empty your mind with our expanding circle animation. You can reach the zen state with ambient sounds such as Rain, Fireplace, Wind."
+  },
+
+  // Special Days
+  "seo_special_t1": { tr: "Özel Günlerim ve Etkinlik Sayacı", en: "My Special Days and Event Counter" },
+  "seo_special_p1": {
+    tr: "Doğum günleri, yılbaşı, tatil planları veya kritik projelerin bitiş tarihlerini VakitHane Özel Günler sekmesine kolayca ekleyebilirsiniz.",
+    en: "You can easily add birthdays, New Year's, holiday plans or critical project deadlines to the VakitHane Special Days tab."
+  },
+  "seo_special_t2": { tr: "Kişisel Geri Sayım Uygulaması", en: "Personal Countdown Application" },
+  "seo_special_p2": {
+    tr: "Cihazınızda yerel olarak güvenle saklanan bu tarihler, herhangi bir üyelik gerektirmeden reklamsız bir kişisel deneyim sunar.",
+    en: "These dates, safely stored locally on your device, offer an ad-free personal experience without requiring any membership."
+  },
+
+  // Stopwatch
+  "seo_stop_t1": { tr: "Online Hassas Kronometre ve Tur Sayacı", en: "Online Precision Stopwatch and Lap Counter" },
+  "seo_stop_p1": {
+    tr: "Spor yaparken veya çalışma sürelerinizi analiz ederken ihtiyacınız olan hassasiyeti VakitHane Online Kronometre ile yakalayın.",
+    en: "Capture the precision you need while exercising or analyzing your study times with VakitHane Online Stopwatch."
+  },
+  "seo_stop_t2": { tr: "Verimlilik ve Süre Analizi", en: "Efficiency and Duration Analysis" },
+  "seo_stop_p2": {
+    tr: "Minimalist tasarımı ve kullanım kolaylığı ile en iyi ve en kötü tur sürelerinizi otomatik olarak işaretleyen kronometremizle performansınızı takip edin.",
+    en: "Track your performance with our stopwatch that automatically marks your best and worst lap times with its minimalist design and ease of use."
+  },
+
+  // World Clocks
+  "seo_world_t1": { tr: "Dünya Saatleri ve Küresel Zaman Dilimleri", en: "World Clocks and Global Time Zones" },
+  "seo_world_p1": {
+    tr: "Londra'dan Tokyo'ya dünyanın dört bir yanındaki önemli şehirlerin güncel saatlerini 3D dünya modeli eşliğinde sunar.",
+    en: "It presents the current times of important cities around the world from London to Tokyo, accompanied by a 3D world model."
+  },
+  "seo_world_t2": { tr: "Anlık Saat Farkı ve Gece/Gündüz Takibi", en: "Instant Time Difference and Day/Night Tracking" },
+  "seo_world_p2": {
+    tr: "İnteraktif 3D küremiz ve şehir listemiz sayesinde hangi şehrin şu an geceyi yaşadığını kolayca anlayabilirsiniz.",
+    en: "Thanks to our interactive 3D globe and city list, you can easily see which city is currently experiencing night."
+  },
 };
 
 interface LanguageContextType {

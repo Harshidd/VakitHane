@@ -123,15 +123,15 @@ export default function DunyaSaatleriPage() {
                 <section className="w-full shrink-0 border-t border-white/5 bg-[#0d0e14] py-20 pb-32 relative z-10">
                     <article className="max-w-3xl mx-auto px-6 text-white/60 flex flex-col gap-8">
                         <div className="space-y-3">
-                            <h2 className="text-2xl font-bold tracking-tight text-white/90">Dünya Saatleri ve Küresel Zaman Dilimleri</h2>
+                            <h2 className="text-2xl font-bold tracking-tight text-white/90">{t("seo_world_t1")}</h2>
                             <p className="text-[15px] leading-relaxed opacity-90">
-                                Küreselleşen dünyada zamanı takip etmek hiç bu kadar önemli olmamıştı. <strong>VakitHane Dünya Saatleri</strong> sayfası, Londra'dan Tokyo'ya, New York'tan Dubai'ye kadar dünyanın dört bir yanındaki önemli şehirlerin güncel saatlerini 3D dünya modeli eşliğinde sunar.
+                                {t("seo_world_p1")}
                             </p>
                         </div>
                         <div className="space-y-3">
-                            <h3 className="text-xl font-bold tracking-tight text-white/90">Anlık Saat Farkı ve Gece/Gündüz Takibi</h3>
+                            <h3 className="text-xl font-bold tracking-tight text-white/90">{t("seo_world_t2")}</h3>
                             <p className="text-[15px] leading-relaxed opacity-90">
-                                İnteraktif 3D küremiz ve şehir listemiz sayesinde hangi şehrin şu an geceyi yaşadığını, hangisinin güne yeni başladığını emoji göstergeleriyle kolayca anlayabilirsiniz. İş toplantılarınızı planlarken veya yurt dışındaki sevdiklerinizle iletişime geçerken vakit kaybı yaşamadan en doğru zaman bilgisine ulaşın.
+                                {t("seo_world_p2")}
                             </p>
                         </div>
                     </article>

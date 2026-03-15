@@ -37,12 +37,12 @@ const MOTIVATIONS: Record<string, string[]> = {
 };
 
 function useCountdown(targetDate: Date) {
-    const [t, setT] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     useEffect(() => {
         const tick = () => {
             const diff = targetDate.getTime() - Date.now();
-            if (diff <= 0) { setT({ days: 0, hours: 0, minutes: 0, seconds: 0 }); return; }
-            setT({
+            if (diff <= 0) { setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 }); return; }
+            setTimeLeft({
                 days: Math.floor(diff / 86_400_000),
                 hours: Math.floor((diff / 3_600_000) % 24),
                 minutes: Math.floor((diff / 60_000) % 60),
@@ -53,13 +53,13 @@ function useCountdown(targetDate: Date) {
         const id = setInterval(tick, 1000);
         return () => clearInterval(id);
     }, [targetDate]);
-    return t;
+    return timeLeft;
 }
 
 function pad(n: number) { return n.toString().padStart(2, "0"); }
 
 export default function SinavSayaciPage() {
-    const { t: translate, language, setLanguage } = useLanguage();
+    const { t, language, setLanguage } = useLanguage();
     const [selectedId, setSelectedId] = useState("yks");
     const exam = EXAMS.find(e => e.id === selectedId) ?? EXAMS[0];
     const countdown = useCountdown(exam.date);
@@ -122,7 +122,7 @@ export default function SinavSayaciPage() {
                             <div className="flex flex-col items-center gap-1 text-center">
                                 <div className="flex items-center gap-2 text-foreground/50 text-[11px] sm:text-[13px] font-semibold tracking-wide">
                                     <Target size={14} />
-                                    {translate("target_time_left")}
+                                    {t("target_time_left")}
                                 </div>
                                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{exam.name}</h1>
                                 <p className="text-[10px] sm:text-xs text-foreground/35 font-medium">
@@ -133,10 +133,10 @@ export default function SinavSayaciPage() {
                             {/* Countdown blocks */}
                             <div className="grid grid-cols-4 gap-3 w-full">
                                 {[
-                                    { label: translate("day"), value: countdown.days },
-                                    { label: translate("hour"), value: countdown.hours },
-                                    { label: translate("minute"), value: countdown.minutes },
-                                    { label: translate("second"), value: countdown.seconds },
+                                    { label: t("day"), value: countdown.days },
+                                    { label: t("hour"), value: countdown.hours },
+                                    { label: t("minute"), value: countdown.minutes },
+                                    { label: t("second"), value: countdown.seconds },
                                 ].map(({ label, value }, i) => (
                                     <div key={i}
                                         className="flex flex-col items-center gap-2 glass-panel py-6 px-2 rounded-2xl border border-foreground/10 relative overflow-hidden">
@@ -160,7 +160,7 @@ export default function SinavSayaciPage() {
                                 return (
                                     <div className="w-full">
                                         <div className="flex justify-between text-[11px] sm:text-[12px] text-foreground/45 font-medium tracking-wide mb-1.5">
-                                            <span className="flex items-center gap-1"><BookOpen size={10} /> {translate("elapsed_time")}</span>
+                                            <span className="flex items-center gap-1"><BookOpen size={10} /> {t("elapsed_time")}</span>
                                             <span>{pct.toFixed(1)}%</span>
                                         </div>
                                         <div className="h-1.5 bg-foreground/8 rounded-full overflow-hidden">
@@ -185,15 +185,15 @@ export default function SinavSayaciPage() {
             <section className="w-full shrink-0 border-t border-foreground/5 bg-background/40 backdrop-blur-3xl py-20 pb-32 relative z-10">
                 <article className="max-w-3xl mx-auto px-6 text-foreground/80 flex flex-col gap-8">
                     <div className="space-y-3">
-                        <h2 className="text-2xl font-bold tracking-tight text-foreground">YKS, LGS ve KPSS'ye Kaç Gün Kaldı?</h2>
+                        <h2 className="text-2xl font-bold tracking-tight text-foreground">{t("seo_exam_t1")}</h2>
                         <p className="text-[15px] leading-relaxed opacity-90">
-                            Hedeflerinize ulaşmak için çıktığınız yolda zaman yönetimi en önemli anahtardır. VakitHane sınav geri sayım sayacı sayesinde <strong>YKS 2026, LGS, KPSS</strong> ve <strong>ALES</strong> gibi Türkiye'nin en büyük sınavlarına saniyesi saniyesine ne kadar süre kaldığını takip edebilirsiniz.
+                            {t("seo_exam_p1")}
                         </p>
                     </div>
                     <div className="space-y-3">
-                        <h3 className="text-xl font-bold tracking-tight text-foreground">Motivasyonunuzu Yüksek Tutun</h3>
+                        <h3 className="text-xl font-bold tracking-tight text-foreground">{t("seo_exam_t2")}</h3>
                         <p className="text-[15px] leading-relaxed opacity-90">
-                            Sayfada yer alan motivasyon alıntıları ve sınavınıza kalan sürenin grafiksel gösterimi (yüzdelik ilerleme çubuğu), stresinizi azaltırken çalışmalara daha iyi odaklanmanızı sağlar. Reklamsız, koyu mod destekli pürüzsüz arayüzümüzle sınav stresinden uzaklaşır, gözünüzü hedefinize dikersiniz.
+                            {t("seo_exam_p2")}
                         </p>
                     </div>
                 </article>

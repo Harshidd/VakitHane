@@ -399,15 +399,15 @@ export default function PrayerTimesPage() {
             <section className="w-full shrink-0 border-t border-foreground/5 bg-background/40 backdrop-blur-3xl py-20 pb-32 relative z-10">
                 <article className="max-w-3xl mx-auto px-6 text-foreground/80 flex flex-col gap-8">
                     <div className="space-y-3">
-                        <h2 className="text-2xl font-bold tracking-tight text-foreground">İl İl Ezan Vakitleri ve Dini Günler Takvimi</h2>
+                        <h2 className="text-2xl font-bold tracking-tight text-foreground">{t("seo_prayer_t1")}</h2>
                         <p className="text-[15px] leading-relaxed opacity-90">
-                            İbadetlerinizi vaktinde yerine getirmek için ihtiyacınız olan tüm bilgilere <strong>VakitHane Namaz Vakitleri</strong> sayfasından ulaşabilirsiniz. İstanbul, Ankara, İzmir ve tüm Türkiye illeri için Diyanet İşleri Başkanlığı verileriyle uyumlu <strong>imsak, güneş, öğle, ikindi, akşam ve yatsı</strong> vakitlerini anlık olarak takip edin.
+                            {t("seo_prayer_p1")}
                         </p>
                     </div>
                     <div className="space-y-3">
-                        <h3 className="text-xl font-bold tracking-tight text-foreground">İftar Sayacı ve Hicri Tarih Bilgisi</h3>
+                        <h3 className="text-xl font-bold tracking-tight text-foreground">{t("seo_prayer_t2")}</h3>
                         <p className="text-[15px] leading-relaxed opacity-90">
-                            Modern ve sade arayüzümüz üzerinden sadece bugünkü vakitleri değil, yaklaşan <strong>Kadir Gecesi, Ramazan Bayramı, Kurban Bayramı</strong> gibi dini gün ve gecelere ne kadar süre kaldığını da görebilirsiniz. Miladi tarihin yanı sıra Hicri takvim desteğiyle manevi takviminizi her an yanınızda taşıyın.
+                            {t("seo_prayer_p2")}
                         </p>
                     </div>
                 </article>

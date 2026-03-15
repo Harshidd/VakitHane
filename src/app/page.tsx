@@ -360,15 +360,15 @@ export default function Home() {
         <section className="w-full shrink-0 border-t border-foreground/5 bg-background/40 backdrop-blur-3xl py-20 pb-32 relative z-10">
           <article className="max-w-3xl mx-auto px-6 text-foreground/80 flex flex-col gap-8">
             <div className="space-y-3">
-              <h1 className="text-2xl font-bold tracking-tight text-foreground">VakitHane: Online Zamanlayıcı ve Pomodoro Sayacı</h1>
+              <h2 className="text-2xl font-bold tracking-tight text-foreground">{t("seo_home_t1")}</h2>
               <p className="text-[15px] leading-relaxed opacity-90">
-                VakitHane, <strong>LGS, YKS, TYT, AYT</strong> gibi büyük sınavlara hazırlanan öğrenciler ve <strong>Pomodoro</strong> tekniği ile çalışma verimini artırmak isteyen herkes için tasarlanmış ücretsiz bir <strong>online zamanlayıcıdır</strong>. Kendi belirlediğiniz odaklanma süresiyle veya hazır sınav şablonlarıyla hedeflerinize emin adımlarla ilerleyebilirsiniz.
+                {t("seo_home_p1")}
               </p>
             </div>
             <div className="space-y-3">
-              <h2 className="text-xl font-bold tracking-tight text-foreground">Sınava Özel Süreler ve Minimalist Tasarım</h2>
+              <h3 className="text-xl font-bold tracking-tight text-foreground">{t("seo_home_t2")}</h3>
               <p className="text-[15px] leading-relaxed opacity-90">
-                Sözel 75 dk, Sayısal 80 dk, TYT 165 dk ve AYT 180 dk gibi hazır süre butonlarımızı kullanarak gerçek sınav deneyimine uygun zaman tutabilirsiniz. Apple standartlarında tasarlanmış temiz, reklamsız ve koyu mod destekli arayüzümüz sayesinde dikkatiniz dağılmaz. Zamanın kontrolünü elinize alın ve VakitHane ile maksimum odaklanmaya ulaşın.
+                {t("seo_home_p2")}
               </p>
             </div>
           </article>

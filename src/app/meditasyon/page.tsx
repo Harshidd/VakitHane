@@ -269,15 +269,15 @@ export default function MeditasyonPage() {
             <section className="w-full shrink-0 border-t border-foreground/5 bg-background/40 backdrop-blur-3xl py-20 pb-32 relative z-10">
                 <article className="max-w-3xl mx-auto px-6 text-foreground/80 flex flex-col gap-8">
                     <div className="space-y-3">
-                        <h2 className="text-2xl font-bold tracking-tight text-foreground">Doğa Sesleri Eşliğinde Nefes ve Meditasyon Egzersizleri</h2>
+                        <h2 className="text-2xl font-bold tracking-tight text-foreground">{t("seo_med_t1")}</h2>
                         <p className="text-[15px] leading-relaxed opacity-90">
-                            Yoğun bir günün ardından rahatlamak veya stresli anlarda sakinleşmek için doğru teknikle nefes almak hayati önem taşır. VakitHane meditasyon sekmesi, bilimsel olarak kanıtlanmış "<strong>4-7-8 Nefes Tekniği</strong>", "<strong>Kare Nefes (Box Breathing)</strong>" ve odaklanma egzersizlerini cihazınıza optimize edilmiş pürüzsüz animasyonlarla sizlere sunar.
+                            {t("seo_med_p1")}
                         </p>
                     </div>
                     <div className="space-y-3">
-                        <h3 className="text-xl font-bold tracking-tight text-foreground">Görsel Yönlendirme ve Farkındalık (Mindfulness)</h3>
+                        <h3 className="text-xl font-bold tracking-tight text-foreground">{t("seo_med_t2")}</h3>
                         <p className="text-[15px] leading-relaxed opacity-90">
-                            Gözünüzü yormayan minimalist yönergeler ve genişleyen çember animasyonumuz ile zihninizi boşaltın. Ortam Sesleri çubuğumuzdan sağladığımız <strong>Yağmur, Şömine, Rüzgar</strong> ortam sesleriyle ambiyansınızı tek tıkla değiştirebilir ve zen haline ulaşabilirsiniz. Modern App standartlarındaki bu pürüzsüz arayüz zihinsel yorgunluğunuzun en büyük ilacıdır.
+                            {t("seo_med_p2")}
                         </p>
                     </div>
                 </article>

@@ -211,15 +211,15 @@ export default function OzelGunlerPage() {
             <section className="w-full shrink-0 border-t border-foreground/5 bg-background/40 backdrop-blur-3xl py-20 pb-32 relative z-10">
                 <article className="max-w-3xl mx-auto px-6 text-foreground/80 flex flex-col gap-8">
                     <div className="space-y-3">
-                        <h2 className="text-2xl font-bold tracking-tight text-foreground">Özel Günlerim ve Etkinlik Sayacı</h2>
+                        <h2 className="text-2xl font-bold tracking-tight text-foreground">{t("seo_special_t1")}</h2>
                         <p className="text-[15px] leading-relaxed opacity-90">
-                            Hayatınızdaki önemli tarihleri unutmamak ve onlara ne kadar zaman kaldığını görmek hiç bu kadar şık olmamıştı. Doğum günleri, yılbaşı, tatil planları, yıl dönümleri veya sizin için kritik olan projelerin bitiş tarihlerini <strong>VakitHane Özel Günler</strong> sekmesine kolayca ekleyebilirsiniz.
+                            {t("seo_special_p1")}
                         </p>
                     </div>
                     <div className="space-y-3">
-                        <h3 className="text-xl font-bold tracking-tight text-foreground">Kişisel Geri Sayım Uygulaması</h3>
+                        <h3 className="text-xl font-bold tracking-tight text-foreground">{t("seo_special_t2")}</h3>
                         <p className="text-[15px] leading-relaxed opacity-90">
-                            Kendi seçeceğiniz eğlenceli emojilerle renklendireceğiniz her bir etkinlik kartı, etkinlik tarihine yaklaştıkça sizi görsel olarak uyarır. Cihazınızda <strong>yerel olarak</strong> (localStorage) güvenle saklanan bu tarihler, herhangi bir üyelik gerektirmeden reklamsız, hızlı ve pürüzsüz bir kişisel deneyim sunar.
+                            {t("seo_special_p2")}
                         </p>
                     </div>
                 </article>
