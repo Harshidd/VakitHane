@@ -90,12 +90,12 @@ export default function SinavSayaciPage() {
                         ))}
                     </div>
 
-                    <div className="absolute right-4 hidden md:block">
+                    <div className="absolute right-4 flex items-center gap-2">
                         <button
                             onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
-                            className="px-3 py-1.5 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-foreground/10"
+                            className="px-2.5 py-1.5 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-foreground/10"
                         >
-                            <Languages size={14} />
+                            <Languages size={13} />
                             <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
                         </button>
                     </div>

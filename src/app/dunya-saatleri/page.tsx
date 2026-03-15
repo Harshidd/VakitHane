@@ -73,7 +73,7 @@ export default function DunyaSaatleriPage() {
 
                     <span className="text-[13px] text-white/40 tracking-wide font-semibold">{t("tab_world_clocks")}</span>
 
-                    <div className="absolute right-4 hidden md:block">
+                    <div className="absolute right-4 flex items-center gap-2">
                         <button
                             onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
                             className="p-2 rounded-full hover:bg-white/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-white/10"

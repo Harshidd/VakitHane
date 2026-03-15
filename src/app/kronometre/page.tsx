@@ -64,7 +64,7 @@ export default function KronometrePage() {
                     
                     <span className="text-[13px] text-foreground/45 tracking-wide font-semibold">{t("tab_stopwatch")}</span>
 
-                    <div className="absolute right-0 hidden md:block">
+                    <div className="absolute right-0 flex items-center gap-2">
                         <button
                             onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
                             className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-foreground/10"

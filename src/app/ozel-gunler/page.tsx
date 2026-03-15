@@ -85,15 +85,13 @@ export default function OzelGunlerPage() {
                     </div>
                     
                     <div className="absolute right-4 flex items-center gap-2">
-                        <div className="hidden md:block">
-                            <button
-                                onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
-                                className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-foreground/10"
-                            >
-                                <Languages size={14} />
-                                <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
-                            </button>
-                        </div>
+                        <button
+                            onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
+                            className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5 glass border border-foreground/10"
+                        >
+                            <Languages size={14} />
+                            <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
+                        </button>
 
                         <button onClick={() => setShowForm(s => !s)}
                             className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all ${showForm

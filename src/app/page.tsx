@@ -140,14 +140,14 @@ export default function Home() {
             </div>
 
             <div className="absolute right-5 flex gap-1 items-center shrink-0">
+              <button
+                onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
+                className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5"
+              >
+                <Languages size={14} />
+                <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
+              </button>
               <div className="hidden xs:flex gap-1 items-center">
-                <button
-                  onClick={() => setLanguage(language === "tr" ? "en" : "tr")}
-                  className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100 flex items-center gap-1.5"
-                >
-                  <Languages size={14} />
-                  <span className="text-[10px] font-bold uppercase tracking-wider">{language}</span>
-                </button>
                 <button className="p-2 rounded-full hover:bg-foreground/10 transition-colors opacity-50 hover:opacity-100">
                   <Settings size={14} />
                 </button>
